@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{650CFDD2-E4A4-4C8E-807C-4CFCD3A68C31}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalLabels.WebApi", "DigitalLabels.WebApi\DigitalLabels.WebApi.csproj", "{98C46D3D-B294-4619-94D1-A19FEF4B234C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalLabels.Core", "DigitalLabels.Core\DigitalLabels.Core.csproj", "{50F350EF-BF2F-4D82-A541-D88F52BB33A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DigitalLabels.Import", "DigitalLabels.Import\DigitalLabels.Import.csproj", "{BE1CE57E-88F3-439B-AECB-5E44E7F229C4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Env", "Env", "{5D67A761-A392-44CD-AF29-BC53B4EDF93A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prod", "Prod", "{E8316A89-66E8-4103-88A2-6186A605D059}"
+	ProjectSection(SolutionItems) = preProject
+		..\env\prod\DeployToProd.bat = ..\env\prod\DeployToProd.bat
+		..\env\prod\DigitalLabels.Import.exe.config = ..\env\prod\DigitalLabels.Import.exe.config
+		..\env\prod\Web.config = ..\env\prod\Web.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Stage", "Stage", "{700C3F35-C802-4511-85B0-F98C7D21751D}"
+	ProjectSection(SolutionItems) = preProject
+		..\env\stage\DeployToStage.bat = ..\env\stage\DeployToStage.bat
+		..\env\stage\DigitalLabels.Import.exe.config = ..\env\stage\DigitalLabels.Import.exe.config
+		..\env\stage\Web.config = ..\env\stage\Web.config
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://tfs:8080/tfs/mv
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DigitalLabels.WebApi\\DigitalLabels.WebApi.csproj
+		SccProjectName1 = DigitalLabels.WebApi
+		SccLocalPath1 = DigitalLabels.WebApi
+		SccProjectUniqueName2 = DigitalLabels.Core\\DigitalLabels.Core.csproj
+		SccProjectName2 = DigitalLabels.Core
+		SccLocalPath2 = DigitalLabels.Core
+		SccProjectUniqueName3 = DigitalLabels.Import\\DigitalLabels.Import.csproj
+		SccProjectName3 = DigitalLabels.Import
+		SccLocalPath3 = DigitalLabels.Import
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98C46D3D-B294-4619-94D1-A19FEF4B234C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98C46D3D-B294-4619-94D1-A19FEF4B234C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98C46D3D-B294-4619-94D1-A19FEF4B234C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98C46D3D-B294-4619-94D1-A19FEF4B234C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50F350EF-BF2F-4D82-A541-D88F52BB33A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50F350EF-BF2F-4D82-A541-D88F52BB33A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50F350EF-BF2F-4D82-A541-D88F52BB33A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50F350EF-BF2F-4D82-A541-D88F52BB33A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE1CE57E-88F3-439B-AECB-5E44E7F229C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE1CE57E-88F3-439B-AECB-5E44E7F229C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE1CE57E-88F3-439B-AECB-5E44E7F229C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE1CE57E-88F3-439B-AECB-5E44E7F229C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E8316A89-66E8-4103-88A2-6186A605D059} = {5D67A761-A392-44CD-AF29-BC53B4EDF93A}
+		{700C3F35-C802-4511-85B0-F98C7D21751D} = {5D67A761-A392-44CD-AF29-BC53B4EDF93A}
+	EndGlobalSection
+EndGlobal

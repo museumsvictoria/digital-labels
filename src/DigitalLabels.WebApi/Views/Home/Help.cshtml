@@ -1,0 +1,40 @@
+﻿@model DigitalLabels.WebApi.ViewModels.HelpViewModel
+
+@{
+    ViewBag.Title = "Digital Labels API Help";    
+}
+
+<h1>Digital Labels API Help</h1>
+
+<div class="overview">
+    <p>The digital labels API is a REST API offering a collection of methods to retrieve information on digital labels stored within Emu.</p>
+    <p>The currently supported response types are XML and Json. In order to recieve either of these types you can change the Accept header in the Request to <strong>application/json</strong> to recieve Json or <strong>application/xml</strong> to recieve XML.</p>
+    <p>An alternative method is to append a query string parameter, either <strong>json=true</strong> to recieve Json or <strong>xml=true</strong> to recieve XML</p>
+</div>
+
+@foreach (var group in Model.Apis)
+{
+    <div class="label">
+        <h3>@group.Key Digital label</h3>
+
+        <div class="accordion">
+            @foreach (var api in group)
+            {
+                <h4>@api.HttpMethod.Method /@api.RelativePath.ToLower()</h4>
+                <div class="documentation">
+                    <p class="text">@api.Documentation</p>
+                    @if(api.ParameterDescriptions.Any())
+                    {
+                        <h5>parameters</h5>
+                        <ul>
+                            @foreach (var param in api.ParameterDescriptions)
+                            {
+                                <li><em>@param.Name</em> (@param.Source): @param.Documentation</li>
+                            }       
+                        </ul>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
