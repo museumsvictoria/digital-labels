@@ -4,6 +4,6 @@
     {
         public static string ApplicationId = "applications/digitallabels";
 
-        public static int DataBatchSize = 1;
+        public static int DataBatchSize = 5;
     }
 }
