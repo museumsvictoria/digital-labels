@@ -94,6 +94,7 @@ namespace DigitalLabels.Import.Factories
                     var fileStream = media.GetMap("resource")["file"] as FileStream;
                     var elements = media.GetStrings("MdaElement_tab");
                     var freeTexts = media.GetStrings("MdaFreeText_tab");
+                    var repositorys = media.GetStrings("ChaRepository_tab");
                     var dateModified = DateTime.ParseExact(
                         string.Format("{0} {1}", media.GetString("AdmDateModified"), media.GetString("AdmTimeModified")),
                         "dd/MM/yyyy HH:mm",
@@ -122,36 +123,60 @@ namespace DigitalLabels.Import.Factories
                         }
                     }
 
-                    var mediumUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "medium");
-                    var largeUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "large");
-                    var mediumResizeSettings = new ResizeSettings
+                    // Now we work out what the media is
+                    if (repositorys != null && repositorys.Any(x => x == "Indigenous Online Images Square"))
                     {
-                        Format = FileFormatType.Jpg.ToString(),
-                        Height = 365,
-                        Mode = FitMode.Max,
-                        Quality = 85
-                    };
-                    var largeResizeSettings = new ResizeSettings
-                    {
-                        Format = FileFormatType.Jpg.ToString(),
-                        MaxHeight = 1600,
-                        MaxWidth = 1600,
-                        Quality = 85
-                    };
-
-                    if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
-                        MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
-                    {
-                        newQuote.Image = new GenerationsImage
+                        var url = PathFactory.GetUrlPath(irn, FileFormatType.Jpg);
+                        var resizeSettings = new ResizeSettings
                         {
-                            Acknowledgements = acknowledgements,
-                            DateModified = dateModified,
-                            Irn = irn,
-                            LargeUrl = largeUrl,
-                            MediumUrl = mediumUrl,
-                            Order = order,
-                            Source = source
+                            Format = FileFormatType.Jpg.ToString(),
+                            MaxHeight = 105,
+                            MaxWidth = 105
                         };
+
+                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        {
+                            newQuote.Thumbnail = new MediaAsset
+                            {
+                                Irn = irn,
+                                DateModified = dateModified,
+                                Url = url
+                            };
+                        }
+                    }
+                    else if (type == "image")
+                    {
+                        var mediumUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "medium");
+                        var largeUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "large");
+                        var mediumResizeSettings = new ResizeSettings
+                        {
+                            Format = FileFormatType.Jpg.ToString(),
+                            Height = 365,
+                            Mode = FitMode.Max,
+                            Quality = 85
+                        };
+                        var largeResizeSettings = new ResizeSettings
+                        {
+                            Format = FileFormatType.Jpg.ToString(),
+                            MaxHeight = 1600,
+                            MaxWidth = 1600,
+                            Quality = 85
+                        };
+
+                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
+                            MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
+                        {
+                            newQuote.Image = new GenerationsImage
+                            {
+                                Acknowledgements = acknowledgements,
+                                DateModified = dateModified,
+                                Irn = irn,
+                                LargeUrl = largeUrl,
+                                MediumUrl = mediumUrl,
+                                Order = order,
+                                Source = source
+                            };
+                        }
                     }
                 }
             }

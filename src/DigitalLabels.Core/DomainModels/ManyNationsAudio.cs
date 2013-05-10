@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace DigitalLabels.Core.DomainModels
 {
-    public class ManyNationsAudio : IMedia
+    public class ManyNationsAudio
     {
         public long Irn { get; set; }
 

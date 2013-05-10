@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace DigitalLabels.Core.DomainModels
 {
-    public class ManyNationsMap : IMedia
+    public class MediaAsset
     {
         public long Irn { get; set; }
 

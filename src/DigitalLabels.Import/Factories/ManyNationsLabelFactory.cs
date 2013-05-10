@@ -179,6 +179,7 @@ namespace DigitalLabels.Import.Factories
                             }
                         }
 
+                        // Now we work out what the media is
                         if (repositorys != null && repositorys.Any(x => x == "ICD Online Images Map"))
                         {
                             var url = PathFactory.GetUrlPath(irn, FileFormatType.Png);
@@ -192,12 +193,32 @@ namespace DigitalLabels.Import.Factories
 
                             if (MediaSaver.Save(fileStream, irn, FileFormatType.Png, resizeSettings))
                             {
-                                newLabel.Map = new ManyNationsMap
+                                newLabel.Map = new MediaAsset
                                     {
                                         Irn = irn,
                                         DateModified = dateModified,
                                         Url = url
                                     };
+                            }
+                        }
+                        else if (repositorys != null && repositorys.Any(x => x == "Indigenous Online Images Square"))
+                        {
+                            var url = PathFactory.GetUrlPath(irn, FileFormatType.Jpg);
+                            var resizeSettings = new ResizeSettings
+                            {
+                                Format = FileFormatType.Jpg.ToString(),
+                                MaxHeight = 105,
+                                MaxWidth = 105
+                            };
+
+                            if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                            {
+                                newLabel.Thumbnail = new MediaAsset
+                                {
+                                    Irn = irn,
+                                    DateModified = dateModified,
+                                    Url = url
+                                };
                             }
                         }
                         else if (type == "image")

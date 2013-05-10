@@ -39,7 +39,9 @@ namespace DigitalLabels.Core.DomainModels
 
         public ManyNationsVideo Video { get; set; }
 
-        public ManyNationsMap Map { get; set; }
+        public MediaAsset Map { get; set; }
+
+        public MediaAsset Thumbnail { get; set; }
 
         public DateTime DateModified { get; set; }
     }

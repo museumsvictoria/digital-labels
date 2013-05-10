@@ -2,7 +2,7 @@
 
 namespace DigitalLabels.Core.DomainModels
 {
-    public class GenerationsImage : IMedia
+    public class GenerationsImage
     {
         public long Irn { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace DigitalLabels.Core.DomainModels
 {
-    public class ManyNationsVideo : IMedia
+    public class ManyNationsVideo
     {
         public long Irn { get; set; }
 
