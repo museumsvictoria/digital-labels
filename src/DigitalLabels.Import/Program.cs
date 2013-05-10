@@ -7,7 +7,6 @@ using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Indexes;
 using DigitalLabels.Core.Infrastructure;
 using DigitalLabels.Import.Factories;
-using DigitalLabels.Import.Utilities;
 using IMu;
 using NLog;
 using Raven.Abstractions.Data;
