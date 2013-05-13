@@ -22,7 +22,7 @@ namespace DigitalLabels.Import.Factories
                        "AdmTimeModified",
                        "captions=[DesCaption_tab,DesPurpose_tab]",
                        "associations=[AssAssociationType_tab,AssAssociationDate_tab,name=AssAssociationNameRef_tab.(NamOtherNames_tab,NamOrganisation,NamPartyType),AssAssociationLocality_tab,AssAssociationState_tab]",
-                       "media=MulMultiMediaRef_tab.(irn,resource,MulMimeType,MdaDataSets_tab,MdaElement_tab,MdaFreeText_tab,AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified)",
+                       "media=MulMultiMediaRef_tab.(irn,resource,MulMimeType,MdaDataSets_tab,MdaElement_tab,MdaFreeText_tab,ChaRepository_tab,AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified)",
                        "narrative=<enarratives:ObjObjectsRef_tab>.(irn,DetPurpose_tab,DepPeople0,NarNarrative,NarNarrativeSummary,interviews=[name=IntIntervieweeRef_tab.(NamOtherNames_tab,NamOrganisation,NamPartyType),IntInterviewLocation_tab],master=AssMasterNarrativeRef.irn,AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified)"
                    };
         }

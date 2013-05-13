@@ -131,7 +131,8 @@ namespace DigitalLabels.Import.Factories
                         {
                             Format = FileFormatType.Jpg.ToString(),
                             MaxHeight = 105,
-                            MaxWidth = 105
+                            MaxWidth = 105,
+                            Quality = 90
                         };
 
                         if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
