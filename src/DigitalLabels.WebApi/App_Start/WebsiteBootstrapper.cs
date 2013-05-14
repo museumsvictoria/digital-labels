@@ -3,7 +3,6 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
-using AttributeRouting.Web.Mvc;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.WebApi.Config;

@@ -3,7 +3,7 @@ The Digital Labels project is a simple self documenting Web API for delivering d
 
 ## What Technology does it use?
 * ASP.Net Framework 4.5 (Web API).
-* RavenDb v2 (build 2261) for persistence.
+* RavenDb v2 (build 2360) for persistence.
 * IMu Client for connecting to EMu (Museum Collections Management System).
 * Ninject for IoC.
 
