@@ -73,6 +73,7 @@
     <Compile Include="DomainModels\GenerationsLabel.cs" />
     <Compile Include="DomainModels\ManyNationsImage.cs" />
     <Compile Include="DomainModels\ManyNationsLabel.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\DocumentStoreExtensions.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
     <Compile Include="Indexes\GenerationsLabel_ByTheme.cs" />

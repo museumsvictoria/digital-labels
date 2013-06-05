@@ -9,6 +9,7 @@ using IMu;
 using ImageResizer;
 using NLog;
 using DigitalLabels.Import.Utilities;
+using DigitalLabels.Core.Extensions;
 
 namespace DigitalLabels.Import.Factories
 {
@@ -74,7 +75,10 @@ namespace DigitalLabels.Import.Factories
                     case "Place Made":
                         var locality = association.GetString("AssAssociationLocality_tab");
                         var state = association.GetString("AssAssociationState_tab");
-                        newLabel.PlaceMade = string.Format("{0}, {1}", locality, state);
+                        newLabel.PlaceMade = new[]{ locality, state }.Concatenate(", ");
+                        // Also state.
+                        if(!string.IsNullOrWhiteSpace(state))
+                            newLabel.State = state;
                         break;
                     case "Indigenous Region":
                         newLabel.Region = association.GetString("AssAssociationRegion_tab");
@@ -127,7 +131,7 @@ namespace DigitalLabels.Import.Factories
                 var authors = narrative.GetMaps("name");
                 if (authors != null)
                 {
-                    newLabel.StoryAuthor = authors.Select(x => x.GetString("NamFullName")).Aggregate((curr, next) => string.IsNullOrEmpty(curr) ? curr + next : curr + ", " + next);
+                    newLabel.StoryAuthor = authors.Select(x => x.GetString("NamFullName")).Concatenate(", ");
                 }
 
                 // Media

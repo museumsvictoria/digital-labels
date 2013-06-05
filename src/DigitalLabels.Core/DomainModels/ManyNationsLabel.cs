@@ -23,6 +23,8 @@ namespace DigitalLabels.Core.DomainModels
 
         public string Region { get; set; }
 
+        public string State { get; set; }
+
         public string Materials { get; set; }
 
         public string Story { get; set; }
