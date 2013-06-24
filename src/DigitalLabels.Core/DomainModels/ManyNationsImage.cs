@@ -20,6 +20,8 @@ namespace DigitalLabels.Core.DomainModels
 
         public string Order { get; set; }
 
+        public string Type { get; set; }
+
         public DateTime DateModified { get; set; }
     }
 }

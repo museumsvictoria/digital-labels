@@ -139,7 +139,7 @@ namespace DigitalLabels.Import.Factories
                 newLabel.Images = new List<ManyNationsImage>();
                 foreach (var media in medias)
                 {
-                    if (media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                    if (media != null && media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab") != null && media.GetStrings("MdaDataSets_tab").Any() && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                     {
                         var irn = long.Parse(media.GetString("irn"));
                         var type = media.GetString("MulMimeType");
@@ -155,7 +155,7 @@ namespace DigitalLabels.Import.Factories
 
                         var length = Arrays.FindLongestLength(elements, qualifiers, freeTexts);
 
-                        string creator = string.Empty, description = string.Empty, source = string.Empty, copyrightHolder = string.Empty, order = string.Empty;
+                        string creator = string.Empty, description = string.Empty, source = string.Empty, copyrightHolder = string.Empty, order = string.Empty, imageType = string.Empty;
 
                         for (var i = 0; i < length; i++)
                         {
@@ -179,6 +179,8 @@ namespace DigitalLabels.Import.Factories
                                     break;
                                 case "Image Order":
                                     order = freeText;
+                                    if (!string.IsNullOrWhiteSpace(freeText))
+                                        imageType = freeText.Split(' ').FirstOrDefault();
                                     break;
                             }
                         }
@@ -255,6 +257,7 @@ namespace DigitalLabels.Import.Factories
                                     Description = description,
                                     Irn = irn,
                                     Order = order,
+                                    Type = imageType,
                                     Source = source,
                                     DateModified = dateModified,
                                     MediumUrl = mediumUrl,

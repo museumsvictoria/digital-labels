@@ -55,7 +55,7 @@ namespace DigitalLabels.Import
                     documentSession.Dispose();
 
                     RunManyNationsImport();
-                    RunGenerationsImport();
+                    //RunGenerationsImport();
                 }
             }
             catch (Exception exception)
