@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DigitalLabels.Core.DomainModels;
 using IMu;
 using ImageResizer;
@@ -42,7 +43,7 @@ namespace DigitalLabels.Import.Factories
 
             // Language Name
             if (!string.IsNullOrWhiteSpace(map.GetString("DesLocalName")))
-                newLabel.LanguageName = map.GetString("DesLocalName").Replace("(Bunjilaka Project)", "").Trim();
+                newLabel.LanguageName = map.GetString("DesLocalName").Replace("(Bunjilaka Project 2012)", "").Trim();
 
             // Associations
             foreach (var association in map.GetMaps("associations"))
@@ -107,7 +108,7 @@ namespace DigitalLabels.Import.Factories
             if(collectionObject != null)
             {
                 newLabel.Case = collectionObject.GetString("StaCase");
-                newLabel.Segment = collectionObject.GetString("StaSegmentName");
+                newLabel.Segment = collectionObject.GetString("StaSegmentName").Replace(@"Many Nations - ", "").Trim();
             }
             
             // Narrative
@@ -139,7 +140,7 @@ namespace DigitalLabels.Import.Factories
                 newLabel.Images = new List<ManyNationsImage>();
                 foreach (var media in medias)
                 {
-                    if (media != null && media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab") != null && media.GetStrings("MdaDataSets_tab").Any() && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                    if (media != null && media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                     {
                         var irn = long.Parse(media.GetString("irn"));
                         var type = media.GetString("MulMimeType");
@@ -152,6 +153,7 @@ namespace DigitalLabels.Import.Factories
                             string.Format("{0} {1}", media.GetString("AdmDateModified"), media.GetString("AdmTimeModified")),
                             "dd/MM/yyyy HH:mm",
                             new CultureInfo("en-AU"));
+                        var title = media.GetString("MulTitle");
 
                         var length = Arrays.FindLongestLength(elements, qualifiers, freeTexts);
 
@@ -199,11 +201,12 @@ namespace DigitalLabels.Import.Factories
 
                             if (MediaSaver.Save(fileStream, irn, FileFormatType.Png, resizeSettings))
                             {
-                                newLabel.Map = new MediaAsset
+                                newLabel.Map = new ManyNationsMap
                                     {
                                         Irn = irn,
                                         DateModified = dateModified,
-                                        Url = url
+                                        Url = url,
+                                        Reference = new Regex(@"[^\d]").Replace(title, string.Empty)
                                     };
                             }
                         }
@@ -235,8 +238,10 @@ namespace DigitalLabels.Import.Factories
                             var mediumResizeSettings = new ResizeSettings
                             {
                                 Format = FileFormatType.Jpg.ToString(),
-                                Height = 365,                                
-                                Mode = FitMode.Max,
+                                Height = 365,
+                                Width = 649,
+                                Mode = FitMode.Pad,
+                                PaddingColor = Color.White,
                                 Quality = 85
                             };
                             var largeResizeSettings = new ResizeSettings
