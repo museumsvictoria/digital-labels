@@ -63,7 +63,6 @@
     <Compile Include="Config\Constants.cs" />
     <Compile Include="Config\IApplicationManager.cs" />
     <Compile Include="DomainModels\Application.cs" />
-    <Compile Include="DomainModels\ManyNationsMap.cs" />
     <Compile Include="DomainModels\FileFormatType.cs" />
     <Compile Include="DomainModels\MediaAsset.cs" />
     <Compile Include="DomainModels\ManyNationsAudio.cs" />

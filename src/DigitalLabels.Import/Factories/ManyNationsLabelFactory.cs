@@ -190,25 +190,7 @@ namespace DigitalLabels.Import.Factories
                         // Now we work out what the media is
                         if (repositorys != null && repositorys.Any(x => x == "ICD Online Images Map"))
                         {
-                            var url = PathFactory.GetUrlPath(irn, FileFormatType.Png);
-                            var resizeSettings = new ResizeSettings
-                                {
-                                    Format = FileFormatType.Png.ToString(),
-                                    MaxHeight = 235,
-                                    MaxWidth = 235
-                                };
-                            resizeSettings.Add("colors", "256");
-
-                            if (MediaSaver.Save(fileStream, irn, FileFormatType.Png, resizeSettings))
-                            {
-                                newLabel.Map = new ManyNationsMap
-                                    {
-                                        Irn = irn,
-                                        DateModified = dateModified,
-                                        Url = url,
-                                        Reference = new Regex(@"[^\d]").Replace(title, string.Empty)
-                                    };
-                            }
+                            newLabel.MapReference = title;
                         }
                         else if (repositorys != null && repositorys.Any(x => x == "Indigenous Online Images Square"))
                         {

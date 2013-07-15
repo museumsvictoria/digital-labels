@@ -41,7 +41,7 @@ namespace DigitalLabels.Core.DomainModels
 
         public ManyNationsVideo Video { get; set; }
 
-        public MediaAsset Map { get; set; }
+        public string MapReference { get; set; }
 
         public MediaAsset Thumbnail { get; set; }
 

@@ -48,14 +48,12 @@ namespace DigitalLabels.WebApi.Controllers.Apis
         [ApiDoc("Returns all of the Generations themes.")]
         public IEnumerable<string> GetAllThemes()
         {
-            var stuff = _documentSession
+            return _documentSession
                 .Query<GenerationsLabel, GenerationsLabel_All>()
                 .GetAllResultsWithPaging()
                 .Select(x => x.Theme)
                 .Distinct()
                 .ToList();
-
-            return stuff;
         }
 
         [GET("theme/{theme}")]
