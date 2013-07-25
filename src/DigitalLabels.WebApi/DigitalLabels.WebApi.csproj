@@ -158,6 +158,7 @@
     <Compile Include="Config\RouteConfig.cs" />
     <Compile Include="App_Start\WebsiteBootstrapper.cs" />
     <Compile Include="Config\WebApiConfig.cs" />
+    <Compile Include="Controllers\Apis\YulendjController.cs" />
     <Compile Include="Controllers\Apis\GenerationsController.cs">
       <SubType>Code</SubType>
     </Compile>

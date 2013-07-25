@@ -203,7 +203,6 @@ namespace DigitalLabels.Import.Factories
                     newQuote.PrimaryImageNarrativeIrn = long.Parse(masterNarrative.GetString("irn"));
 
                 newQuote.PeopleDepicted = narrative.GetStrings("DepPeople0").FirstOrDefault();
-                newQuote.QuoteDescription = narrative.GetString("NarNarrativeSummary");
                 newQuote.Quote = HtmlConverter.HtmlToText(narrative.GetString("NarNarrative"));
 
                 var interviews = narrative.GetMaps("interviews");

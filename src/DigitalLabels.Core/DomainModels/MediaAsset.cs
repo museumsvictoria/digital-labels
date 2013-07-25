@@ -9,5 +9,6 @@ namespace DigitalLabels.Core.DomainModels
         public string Url { get; set; }
 
         public DateTime DateModified { get; set; }
+
     }
 }

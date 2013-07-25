@@ -33,8 +33,6 @@ namespace DigitalLabels.Core.DomainModels
 
         public string QuoteAuthor { get; set; }
 
-        public string QuoteDescription { get; set; }
-
         public string QuoteSource { get; set; }
 
         public string QuoteName { get; set; }
