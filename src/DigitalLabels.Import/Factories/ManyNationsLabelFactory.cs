@@ -252,6 +252,24 @@ namespace DigitalLabels.Import.Factories
                                 });
                             }
                         }
+                        else if (type == "video")
+                        {
+                            var url = PathFactory.GetUrlPath(irn, FileFormatType.Mp4);
+                            if (MediaSaver.Save(fileStream, irn, FileFormatType.Mp4, null))
+                            {
+                                newLabel.Video = new ManyNationsVideo
+                                    {
+                                        CopyrightHolder = copyrightHolder,
+                                        Creator = creator,
+                                        Description = description,
+                                        Irn = irn,
+                                        Order = order,
+                                        Source = source,
+                                        DateModified = dateModified,
+                                        Url = url
+                                    };
+                            }
+                        }
                     }
                 }
             }

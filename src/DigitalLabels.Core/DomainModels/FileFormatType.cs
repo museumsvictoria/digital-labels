@@ -9,6 +9,7 @@ namespace DigitalLabels.Core.DomainModels
     public enum FileFormatType
     {
         Jpg,
-        Png
+        Png,
+        Mp4
     }
 }
