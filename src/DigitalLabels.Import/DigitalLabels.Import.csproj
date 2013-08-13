@@ -77,6 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\YulendjImuFactory.cs" />
+    <Compile Include="Factories\YulendjLabelFactory.cs" />
     <Compile Include="Factories\GenerationsLabelFactory.cs" />
     <Compile Include="Factories\GenerationsImuFactory.cs" />
     <Compile Include="Factories\ManyNationsImuFactory.cs" />
@@ -89,7 +91,9 @@
     <Compile Include="Utilities\MediaSaver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -54,8 +54,9 @@ namespace DigitalLabels.Import
                     documentSession.SaveChanges();
                     documentSession.Dispose();
 
-                    RunManyNationsImport();
+                    //RunManyNationsImport();
                     //RunGenerationsImport();
+                    RunYulendjImport();
                 }
             }
             catch (Exception exception)
@@ -241,6 +242,81 @@ namespace DigitalLabels.Import
 
             stopwatch.Stop();
             _log.Debug("Generations import finished, total Time: {0:0.00} Mins", stopwatch.Elapsed.TotalMinutes);
+        }
+
+        private static void RunYulendjImport()
+        {
+            _log.Debug("Begining Yulendj Label import");
+
+            var labels = new List<YulendjLabel>();
+
+            #region data
+
+            // Get search ready
+            var catalogue = new Module("enarratives", _session);
+
+            // Perform search
+            var stopwatch = Stopwatch.StartNew();
+            var hits = catalogue.FindTerms(YulendjImuFactory.GetImportTerms());
+            stopwatch.Stop();
+            _log.Debug("Finished Catalogue Emu Search in {0:#,#} ms. {1} Hits", stopwatch.ElapsedMilliseconds, hits);
+
+            var count = 0;
+            stopwatch = Stopwatch.StartNew();
+
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+                    {
+                        _log.Debug("Cancel command recieved stopping Data import");
+                        return;
+                    }
+
+                    var results = catalogue.Fetch("start", count, Constants.DataBatchSize, YulendjImuFactory.GetImportColumns());
+
+                    if (results.Count == 0)
+                        break;
+
+                    // Create labels
+                    var newLabels = results.Rows.Select(YulendjLabelFactory.MakeLabel).ToList();
+
+                    // Keep labels for file import
+                    labels.AddRange(newLabels);
+
+                    count += results.Count;
+                    _log.Debug("Yulendj import progress... {0}/{1}", count, hits);
+                }
+            }
+
+            #endregion
+
+            #region persist
+
+            _log.Debug("Deleting existing Yulendj labels");
+
+            // Delete all existing data
+            using (var documentSession = _documentStore.OpenSession())
+            {
+                _documentStore.DatabaseCommands.DeleteByIndex("YulendjLabel/All", new IndexQuery(), false);
+                documentSession.SaveChanges();
+            }
+
+            _log.Debug("Saving Yulendj labels");
+
+            using (var bulkInsert = _documentStore.BulkInsert())
+            {
+                foreach (var label in labels)
+                {
+                    bulkInsert.Store(label);
+                }
+            }
+
+            #endregion
+
+            stopwatch.Stop();
+            _log.Debug("Yulendj import finished, total Time: {0:0.00} Mins", stopwatch.Elapsed.TotalMinutes);
         }
 
         private static void Initialize()

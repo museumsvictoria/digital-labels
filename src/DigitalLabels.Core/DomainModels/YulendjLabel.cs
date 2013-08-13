@@ -1,4 +1,6 @@
-﻿namespace DigitalLabels.Core.DomainModels
+﻿using System;
+
+namespace DigitalLabels.Core.DomainModels
 {
     public class YulendjLabel : DomainModel
     {
@@ -13,5 +15,7 @@
         public YulendjImage ProfileImage { get; set; }
 
         public YulendjImage TexturePanelImage { get; set; }
+
+        public DateTime DateModified { get; set; }
     }
 }
