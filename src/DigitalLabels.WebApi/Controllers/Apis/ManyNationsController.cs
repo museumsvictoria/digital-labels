@@ -23,7 +23,7 @@ namespace DigitalLabels.WebApi.Controllers.Apis
         }
 
         [GET("")]
-        [ApiDoc("Returns the entire set of Many Nations Labels.")]
+        [ApiDoc("Returns the entire set of Many Nations labels.")]
         public IEnumerable<ManyNationsLabel> GetAll()
         {
             // TODO: add paging and remove allresults when working on digital labels again.
@@ -36,7 +36,7 @@ namespace DigitalLabels.WebApi.Controllers.Apis
 
         [GET("{irn:long}")]
         [ApiDoc("Return a single Many Nations Label by Irn.")]
-        [ApiParameterDoc("irn", "The Irn of the Label. [integer]")]
+        [ApiParameterDoc("irn", "The Irn of the label. [integer]")]
         public ManyNationsLabel GetByIrn(long irn)
         {
             return _documentSession

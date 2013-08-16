@@ -77,6 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\StandingStrongImuFactory.cs" />
+    <Compile Include="Factories\StandingStrongLabelFactory.cs" />
     <Compile Include="Factories\YulendjImuFactory.cs" />
     <Compile Include="Factories\YulendjLabelFactory.cs" />
     <Compile Include="Factories\GenerationsLabelFactory.cs" />

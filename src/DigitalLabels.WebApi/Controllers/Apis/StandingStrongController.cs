@@ -12,36 +12,37 @@ using DigitalLabels.Core.Extensions;
 
 namespace DigitalLabels.WebApi.Controllers.Apis
 {
-    [RoutePrefix("api/yulendj")]
-    public class YulendjController : ApiController
+    [RoutePrefix("api/standingstrong")]
+    public class StandingStrongController : ApiController
     {
         private readonly IDocumentSession _documentSession;
 
-        public YulendjController(
+        public StandingStrongController(
             IDocumentSession documentSession)
         {
             _documentSession = documentSession;
         }
 
         [GET("")]
-        [ApiDoc("Returns the entire set of Yulendj Labels.")]
-        public IEnumerable<YulendjLabel> GetAll()
+        [ApiDoc("Returns the entire set of Standing Strong labels.")]
+        public IEnumerable<StandingStrongLabel> GetAll()
         {
             // TODO: add paging and remove allresults when working on digital labels again.
 
             return _documentSession
-                .Query<YulendjLabel, YulendjLabel_All>()
+                .Query<StandingStrongLabel, StandingStrongLabel_All>()
                 .GetAllResultsWithPaging()
+                .OrderBy(x => x.Order)
                 .ToList();
         }
 
         [GET("{irn:long}")]
-        [ApiDoc("Return a single Yulendj Label by primary image Irn.")]
+        [ApiDoc("Return a single Standing Strong Label by primary image Irn.")]
         [ApiParameterDoc("irn", "The Irn of the label. [integer]")]
-        public YulendjLabel GetByIrn(long irn)
+        public StandingStrongLabel GetByIrn(long irn)
         {
             return _documentSession
-                .Load<YulendjLabel>(irn);
+                .Load<StandingStrongLabel>(irn);
         }
     }
 }

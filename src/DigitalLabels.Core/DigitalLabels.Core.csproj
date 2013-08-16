@@ -63,6 +63,8 @@
     <Compile Include="Config\Constants.cs" />
     <Compile Include="Config\IApplicationManager.cs" />
     <Compile Include="DomainModels\Application.cs" />
+    <Compile Include="DomainModels\StandingStrongImage.cs" />
+    <Compile Include="DomainModels\StandingStrongLabel.cs" />
     <Compile Include="DomainModels\YulendjImage.cs" />
     <Compile Include="DomainModels\YulendjLabel.cs" />
     <Compile Include="DomainModels\FileFormatType.cs" />
@@ -78,6 +80,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\DocumentStoreExtensions.cs" />
     <Compile Include="Extensions\QueryableExtensions.cs" />
+    <Compile Include="Indexes\StandingStrongLabel_All.cs" />
     <Compile Include="Indexes\YulendjLabel_All.cs" />
     <Compile Include="Indexes\GenerationsLabel_ByTheme.cs" />
     <Compile Include="Indexes\GenerationsLabel_All.cs" />

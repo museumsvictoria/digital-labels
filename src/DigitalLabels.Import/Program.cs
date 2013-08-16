@@ -54,9 +54,10 @@ namespace DigitalLabels.Import
                     documentSession.SaveChanges();
                     documentSession.Dispose();
 
-                    //RunManyNationsImport();
-                    //RunGenerationsImport();
+                    RunManyNationsImport();
+                    RunGenerationsImport();
                     RunYulendjImport();
+                    RunStandingStrongImport();
                 }
             }
             catch (Exception exception)
@@ -259,7 +260,7 @@ namespace DigitalLabels.Import
             var stopwatch = Stopwatch.StartNew();
             var hits = catalogue.FindTerms(YulendjImuFactory.GetImportTerms());
             stopwatch.Stop();
-            _log.Debug("Finished Catalogue Emu Search in {0:#,#} ms. {1} Hits", stopwatch.ElapsedMilliseconds, hits);
+            _log.Debug("Finished Narrative Emu Search in {0:#,#} ms. {1} Hits", stopwatch.ElapsedMilliseconds, hits);
 
             var count = 0;
             stopwatch = Stopwatch.StartNew();
@@ -317,6 +318,81 @@ namespace DigitalLabels.Import
 
             stopwatch.Stop();
             _log.Debug("Yulendj import finished, total Time: {0:0.00} Mins", stopwatch.Elapsed.TotalMinutes);
+        }
+
+        private static void RunStandingStrongImport()
+        {
+            _log.Debug("Begining Standing Strong Label import");
+
+            var labels = new List<StandingStrongLabel>();
+
+            #region data
+
+            // Get search ready
+            var catalogue = new Module("enarratives", _session);
+
+            // Perform search
+            var stopwatch = Stopwatch.StartNew();
+            var hits = catalogue.FindTerms(StandingStrongImuFactory.GetImportTerms());
+            stopwatch.Stop();
+            _log.Debug("Finished Narrative Emu Search in {0:#,#} ms. {1} Hits", stopwatch.ElapsedMilliseconds, hits);
+
+            var count = 0;
+            stopwatch = Stopwatch.StartNew();
+
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+                    {
+                        _log.Debug("Cancel command recieved stopping Data import");
+                        return;
+                    }
+
+                    var results = catalogue.Fetch("start", count, Constants.DataBatchSize, StandingStrongImuFactory.GetImportColumns());
+
+                    if (results.Count == 0)
+                        break;
+
+                    // Create labels
+                    var newLabels = results.Rows.Select(StandingStrongLabelFactory.MakeLabel).ToList();
+
+                    // Keep labels for file import
+                    labels.AddRange(newLabels);
+
+                    count += results.Count;
+                    _log.Debug("Standing Strong import progress... {0}/{1}", count, hits);
+                }
+            }
+
+            #endregion
+
+            #region persist
+
+            _log.Debug("Deleting existing Standing Strong labels");
+
+            // Delete all existing data
+            using (var documentSession = _documentStore.OpenSession())
+            {
+                _documentStore.DatabaseCommands.DeleteByIndex("StandingStrongLabel/All", new IndexQuery(), false);
+                documentSession.SaveChanges();
+            }
+
+            _log.Debug("Saving Standing Strong labels");
+
+            using (var bulkInsert = _documentStore.BulkInsert())
+            {
+                foreach (var label in labels)
+                {
+                    bulkInsert.Store(label);
+                }
+            }
+
+            #endregion
+
+            stopwatch.Stop();
+            _log.Debug("Standing Strong import finished, total Time: {0:0.00} Mins", stopwatch.Elapsed.TotalMinutes);
         }
 
         private static void Initialize()
