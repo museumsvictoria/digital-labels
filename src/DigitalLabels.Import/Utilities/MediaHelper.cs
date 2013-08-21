@@ -13,7 +13,7 @@ using NLog;
 
 namespace DigitalLabels.Import.Utilities
 {
-    public static class MediaSaver
+    public static class MediaHelper
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
 
@@ -59,6 +59,22 @@ namespace DigitalLabels.Import.Utilities
             }
 
             return false;
+        }
+
+        public static StandingStrongThumbnailType GetStandingStrongThumbnailType(FileStream fileStream)
+        {
+            var image = ImageBuilder.Current.LoadImage(fileStream, null, true);
+
+            if (image.Height == 230 && image.Width == 368)
+                return StandingStrongThumbnailType.full;
+            if (image.Height == 350 && image.Width == 179)
+                return StandingStrongThumbnailType.triple;
+            if (image.Height == 230 && image.Width == 179)
+                return StandingStrongThumbnailType.@double;
+            if (image.Height == 110 && image.Width == 179)
+                return StandingStrongThumbnailType.single;
+
+            throw new Exception("Unexpected resolution found for Standing Strong thumbnail");
         }
     }
 }

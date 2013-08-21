@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -53,7 +52,7 @@ namespace DigitalLabels.Import.Factories
             var medias = map.GetMaps("media");
             foreach (var media in medias)
             {
-                if (media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                if (/*media.GetString("AdmPublishWebNoPassword") == "Yes" && */media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                 {
                     var irn = long.Parse(media.GetString("irn"));
                     var type = media.GetString("MulMimeType");
@@ -96,20 +95,23 @@ namespace DigitalLabels.Import.Factories
                     var url = PathFactory.GetUrlPath(irn, FileFormatType.Jpg);
 
                     // Now we work out what the media is
-                    if (repositorys != null && repositorys.Any(x => x == "Indigenous Online Images Square"))
+                    if (repositorys != null && repositorys.Any(x => x == "Indigenous Images" || x == "Indigenous Online Images Square"))
                     {
-                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, null))
+                        var thumbnailType = MediaHelper.GetStandingStrongThumbnailType(fileStream);
+
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, null))
                         {
-                            newLabel.Thumbnail = new MediaAsset
+                            newLabel.Thumbnail = new StandingStrongThumbnail()
                                 {
                                     Irn = irn,
                                     DateModified = dateModified,
-                                    Url = url
+                                    Url = url,
+                                    Type = thumbnailType
                                 };
                         }
                     }
                     else
-                    {
+                    {                        
                         var resizeSettings = new ResizeSettings
                             {
                                 Format = FileFormatType.Jpg.ToString(),
@@ -118,7 +120,7 @@ namespace DigitalLabels.Import.Factories
                                 Quality = 90
                             };
 
-                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
                         {
                             newLabel.Image = new StandingStrongImage()
                                 {

@@ -135,7 +135,7 @@ namespace DigitalLabels.Import.Factories
                             Quality = 90
                         };
 
-                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
                         {
                             newQuote.Thumbnail = new MediaAsset
                             {
@@ -164,8 +164,8 @@ namespace DigitalLabels.Import.Factories
                             Quality = 85
                         };
 
-                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
-                            MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
+                            MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
                         {
                             newQuote.Image = new GenerationsImage
                             {

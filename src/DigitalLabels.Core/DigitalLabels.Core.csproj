@@ -63,6 +63,8 @@
     <Compile Include="Config\Constants.cs" />
     <Compile Include="Config\IApplicationManager.cs" />
     <Compile Include="DomainModels\Application.cs" />
+    <Compile Include="DomainModels\StandingStrongThumbnail.cs" />
+    <Compile Include="DomainModels\StandingStrongThumbnailType.cs" />
     <Compile Include="DomainModels\StandingStrongImage.cs" />
     <Compile Include="DomainModels\StandingStrongLabel.cs" />
     <Compile Include="DomainModels\YulendjImage.cs" />

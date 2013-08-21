@@ -93,14 +93,14 @@ namespace DigitalLabels.Import.Factories
                     // Now we work out what the media is
                     if (imageType == "portrait")
                     {
-                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
                         {
                             newLabel.ProfileImage = image;
                         }
                     }
                     else if (imageType == "texture")
                     {
-                        if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
                         {
                             newLabel.TexturePanelImage = image;
                         }

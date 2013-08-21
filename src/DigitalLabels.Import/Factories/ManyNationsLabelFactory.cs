@@ -203,7 +203,7 @@ namespace DigitalLabels.Import.Factories
                                 Quality = 90
                             };
 
-                            if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                            if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
                             {
                                 newLabel.Thumbnail = new MediaAsset
                                 {
@@ -234,8 +234,8 @@ namespace DigitalLabels.Import.Factories
                                 Quality = 85
                             };
 
-                            if (MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
-                                MediaSaver.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
+                            if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
+                                MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
                             {
                                 newLabel.Images.Add(new ManyNationsImage
                                 {
@@ -255,7 +255,7 @@ namespace DigitalLabels.Import.Factories
                         else if (type == "video")
                         {
                             var url = PathFactory.GetUrlPath(irn, FileFormatType.Mp4);
-                            if (MediaSaver.Save(fileStream, irn, FileFormatType.Mp4, null))
+                            if (MediaHelper.Save(fileStream, irn, FileFormatType.Mp4, null))
                             {
                                 newLabel.Video = new ManyNationsVideo
                                     {

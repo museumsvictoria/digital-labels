@@ -1,0 +1,174 @@
+/* general styles */
+body {
+margin: 0;
+padding: 0;
+width: 768px;
+font-family: Univers;
+color: #fff;
+background: #000;
+-webkit-user-select: none;
+}
+
+html{
+	background: #fff;
+}
+
+@font-face {
+  font-family: Univers;
+  src: url("../assets/UniversCom-45Light.ttf");
+}
+@font-face {
+  font-family: IdealSans;
+  src: url("../assets/IdealSans-Book-Pro.otf");
+}
+
+/* photo grid styles */
+#grid {
+  background: #000;
+  max-width: 757px;
+  margin-left: 11px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+}
+#grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.logo {
+  float: left;
+}
+.logo img {
+  display: block;
+}
+.label {
+  float: left;
+}
+.label img {
+  display: block;
+}
+.label.single, .label.single img {
+  width: 179px;
+  height: 110px;
+}
+.label.double, .label.double img {
+  width: 179px;
+  height: 230px;
+}
+.label.triple, .label.triple img {
+  width: 179px;
+  height: 350px;
+}
+.label.full, .label.full img {
+  width: 368px;
+  height: 230px;
+}
+
+
+/* image detail styles */
+#details {
+  display: none;
+  z-index: 200;
+  width: 768px;
+  height: 1024px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000 top left no-repeat url('../assets/bg_details.jpg');
+}
+
+
+/* header styles */
+#details .header {
+  background: #c7940d;
+  /*min-height: 52px;
+  max-height: 100px;*/
+  height: 115px;
+  margin: 0 0 20px;
+}
+
+#details .header .title {
+  color: #573905;
+  font-family: IdealSans;
+  font-size: 24px;
+  width: 600px;
+  margin: 0 auto;
+  padding: 40px 0 0;
+}
+
+#details .back {
+  position: absolute;
+  right: 11px;
+  top: 11px;
+  height: 30px;
+  width: 30px;
+  background: #3b3b3b;
+}
+
+#details .back .arrow-left {
+  width: 0; 
+  height: 0; 
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;   
+  border-right: 11px solid #fff;
+  position: absolute;
+  top: 6px;
+  left: 8px;
+}
+
+
+
+
+#details .image {
+  text-align: center;
+  height: 500px;
+}
+
+#details .image img {
+  margin: 0 auto;
+  max-height: 500px;
+  max-width: 728px;
+  display: block;
+}
+
+#details .text {
+  width: 600px;
+  margin: 15px auto;
+
+
+}
+
+#details .credits {
+  color: #fff;
+  width: 600px;
+  margin: 5px auto 15px;
+  font-size: 12px;
+  height: 15px;
+  text-align: center;
+}
+
+#details .quote {
+  margin: 0 0 20px;  
+  font-family: IdealSans;
+  font-size: 24px;
+  color: #6f625a;
+  
+  position: relative;
+}
+#details .quote:after {
+  content: '‘';
+  display: block;
+  position: absolute;
+  top:-28px;
+  left: -40px;
+  font-size: 130px;
+}
+
+.quote-source {
+  font-size: 18px;
+  margin: 0 0 20px;
+}
+
+#details .story {
+  color: #fff;
+}

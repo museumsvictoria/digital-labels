@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>Standing Strong</title>
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/idangerous.swiper.css">
+</head>
+<body>
+<div id="details">
+</div>
+<div class="swiper-container swiper-grid">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+      <div id="grid">
+      </div>
+    </div>
+  </div>
+  <div class="swiper-scrollbar"></div>
+</div>
+<script src="js/jquery-2.0.3.min.js"></script>
+<script src="js/packery.pkgd.js"></script>
+<script src="js/imagesloaded.pkgd.js"></script>
+<script src="js/idangerous.swiper-2.0.js"></script>
+<script src="js/idangerous.swiper.scrollbar-2.0.js"></script>
+<script src="js/handlebars.js"></script>
+<script>
+  $(document).ready(function() {
+    var labelTemplate = Handlebars.compile($("#label-template").html());
+    var detailsTemplate = Handlebars.compile($("#details-template").html());
+    var digitalLabelsAPI = "http://localhost:59115/api/standingstrong?json=true";
+    var details = $('#details');
+
+    $.getJSON(digitalLabelsAPI).done(function( data ) {
+        var gridSwiper;
+        // Build grid
+        for (var i=0;i<data.length;i++)
+        {
+            var newLabel = $(labelTemplate(data[i])).data('index', i);
+
+            newLabel.on('click', function() {
+                if(gridSwiper.positions.abs == 0) {
+                    details.html(detailsTemplate(data[$(this).data('index')]));
+
+                    details
+                    .html(detailsTemplate(data[$(this).data('index')]))
+                    .imagesLoaded( function() { 
+                        details.show(); 
+
+                        var textHeight = $('.swiper-text .text').height();
+                        var containerHeight = $('.swiper-container.swiper-text').height();                    
+
+                        if(textHeight > containerHeight)
+                        {
+                            var textSwiper = new Swiper('.swiper-text', {
+                                scrollContainer: true,
+                                mousewheelControl: false,
+                                mode:'vertical',
+                                //Enable Scrollbar
+                                scrollbar: {
+                                  container :'.swiper-text .swiper-scrollbar',
+                                  hide: true,
+                                  draggable: false  
+                                }
+                            })
+                        }
+                        
+                    });
+                    $('.back').on('click', function() {
+                        details.hide();
+                    });
+                }
+            });
+
+            $('#grid').append(newLabel);
+        }
+
+        $('#grid').imagesLoaded( function() {
+
+            gridSwiper = new Swiper('.swiper-grid', {
+                scrollContainer: true,
+                mousewheelControl: false,
+                mode:'vertical',
+                scrollbar: {
+                  container :'.swiper-grid .swiper-scrollbar',
+                  hide: true,
+                  draggable: false 
+                }
+            });
+
+            $('#grid').packery({
+               itemSelector: '.label',
+               columnWidth: 179,
+               gutter: 10
+             });
+
+        });
+    });
+  });
+</script>
+<script id="label-template" type="text/x-handlebars-template">
+    {{#if Thumbnail}}
+    <div class="label {{Thumbnail.Type}}">
+        <img src="{{Thumbnail.Url}}">
+    </div>
+    {{/if}}
+</script>
+<script id="details-template" type="text/x-handlebars-template">
+<div class="header">
+    <div class="back">
+        <div class="arrow-left"></div>
+    </div>            
+    <div class="title">{{Image.Description}}</div>
+</div>
+<div class="image">
+    <img src="{{Image.Url}}" />
+</div>
+<div class="credits">Photographer - {{Image.Photographer}}, Source - {{Image.Source}}</div>
+<div class="swiper-container swiper-text">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+        <div class="text">     
+            {{#if Quote}}
+            <div class="quote">{{Quote}}</div>
+            {{/if}}
+            {{#if QuoteSource}}
+            <div class="quote-source">{{QuoteSource}}</div>
+            {{/if}}
+            <div class="story">{{Story}}</div>
+        </div>
+    </div>
+  </div>
+  <div class="swiper-scrollbar"></div>
+</div>
+</script>
+</body>
+</html>

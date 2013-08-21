@@ -14,7 +14,7 @@ namespace DigitalLabels.Core.DomainModels
 
         public StandingStrongImage Image { get; set; }
 
-        public MediaAsset Thumbnail { get; set; }
+        public StandingStrongThumbnail Thumbnail { get; set; }
 
         public DateTime DateModified { get; set; }
 

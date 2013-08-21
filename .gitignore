@@ -169,3 +169,5 @@ env/
 packages/
 logs/
 src/DigitalLabels.WebApi/media
+*.otf
+*.ttf
