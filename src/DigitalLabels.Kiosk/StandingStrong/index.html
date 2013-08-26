@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/idangerous.swiper.css">
 </head>
 <body>
+<div id="progress">
+</div>
 <div id="details">
 </div>
 <div class="swiper-container swiper-grid">
@@ -28,23 +30,26 @@
   $(document).ready(function() {
     var labelTemplate = Handlebars.compile($("#label-template").html());
     var detailsTemplate = Handlebars.compile($("#details-template").html());
-    var digitalLabelsAPI = "http://localhost:59115/api/standingstrong?json=true";
+    var digitalLabelsAPI = "http://orac.mv.vic.gov.au:8034/api/standingstrong?json=true";
     var details = $('#details');
+    var grid = $('#grid');
 
+    $('#progress').text('fetching data');
     $.getJSON(digitalLabelsAPI).done(function( data ) {
+        $('#progress').text('done fetching data');
         var gridSwiper;
         // Build grid
         for (var i=0;i<data.length;i++)
         {
             var newLabel = $(labelTemplate(data[i])).data('index', i);
 
-            newLabel.on('click', function() {
+            newLabel.on('click', function() {                
                 if(gridSwiper.positions.abs == 0) {
                     details.html(detailsTemplate(data[$(this).data('index')]));
 
                     details
                     .html(detailsTemplate(data[$(this).data('index')]))
-                    .imagesLoaded( function() { 
+                    .imagesLoaded(function() { 
                         details.show(); 
 
                         var textHeight = $('.swiper-text .text').height();
@@ -59,23 +64,34 @@
                                 //Enable Scrollbar
                                 scrollbar: {
                                   container :'.swiper-text .swiper-scrollbar',
-                                  hide: true,
+                                  hide: false,
                                   draggable: false  
                                 }
                             })
                         }
-                        
+
+                        var imgHeight = $('#details').height() - ($('.header').outerHeight(true) + $('.credits').outerHeight(true) + $('.swiper-text').outerHeight(true));                        
+                        $('.image img').css('max-height', imgHeight);                        
                     });
+
                     $('.back').on('click', function() {
                         details.hide();
                     });
                 }
             });
 
-            $('#grid').append(newLabel);
+            grid.append(newLabel);
+            if(i == 0)
+                grid.append(labelTemplate({ Thumbnail: { Type: "full", Url: "assets/logo.jpg" }}))
         }
 
-        $('#grid').imagesLoaded( function() {
+        var imageLoadedProgress = 0;
+        var totalImages = $('#grid img').length
+
+        grid
+        .imagesLoaded()
+        .always(function(i) {
+            $('#progress').hide();
 
             gridSwiper = new Swiper('.swiper-grid', {
                 scrollContainer: true,
@@ -83,7 +99,7 @@
                 mode:'vertical',
                 scrollbar: {
                   container :'.swiper-grid .swiper-scrollbar',
-                  hide: true,
+                  hide: false,
                   draggable: false 
                 }
             });
@@ -93,7 +109,10 @@
                columnWidth: 179,
                gutter: 10
              });
-
+        })
+        .progress(function(i, image) {
+            imageLoadedProgress++;            
+            $('#progress').text(imageLoadedProgress + '/' + totalImages + ' images loaded');
         });
     });
   });
@@ -109,17 +128,17 @@
 <div class="header">
     <div class="back">
         <div class="arrow-left"></div>
-    </div>            
+    </div>
     <div class="title">{{Image.Description}}</div>
 </div>
 <div class="image">
     <img src="{{Image.Url}}" />
+    <div class="credits">Photographer - {{Image.Photographer}}, Source - {{Image.Source}}</div>
 </div>
-<div class="credits">Photographer - {{Image.Photographer}}, Source - {{Image.Source}}</div>
 <div class="swiper-container swiper-text">
   <div class="swiper-wrapper">
     <div class="swiper-slide">
-        <div class="text">     
+        <div class="text">
             {{#if Quote}}
             <div class="quote">{{Quote}}</div>
             {{/if}}

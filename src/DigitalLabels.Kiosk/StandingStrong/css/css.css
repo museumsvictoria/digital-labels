@@ -83,7 +83,7 @@ html{
   background: #c7940d;
   /*min-height: 52px;
   max-height: 100px;*/
-  height: 115px;
+  min-height: 115px;
   margin: 0 0 20px;
 }
 
@@ -93,7 +93,7 @@ html{
   font-size: 24px;
   width: 600px;
   margin: 0 auto;
-  padding: 40px 0 0;
+  padding: 40px 0 17px;
 }
 
 #details .back {
@@ -121,7 +121,7 @@ html{
 
 #details .image {
   text-align: center;
-  height: 500px;
+  
 }
 
 #details .image img {
@@ -134,8 +134,6 @@ html{
 #details .text {
   width: 600px;
   margin: 15px auto;
-
-
 }
 
 #details .credits {
@@ -144,7 +142,7 @@ html{
   margin: 5px auto 15px;
   font-size: 12px;
   height: 15px;
-  text-align: center;
+  text-align: left;
 }
 
 #details .quote {

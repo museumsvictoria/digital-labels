@@ -52,7 +52,7 @@ namespace DigitalLabels.Import.Factories
             var medias = map.GetMaps("media");
             foreach (var media in medias)
             {
-                if (/*media.GetString("AdmPublishWebNoPassword") == "Yes" && */media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                if (media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                 {
                     var irn = long.Parse(media.GetString("irn"));
                     var type = media.GetString("MulMimeType");
@@ -86,8 +86,9 @@ namespace DigitalLabels.Import.Factories
                                 source = freeText;
                                 break;
                             case "Image Order":
-                                if (!string.IsNullOrWhiteSpace(freeText))
-                                    newLabel.Order = int.Parse(freeText);
+                                int order;
+                                if (int.TryParse(freeText, out order))
+                                    newLabel.Order = order;
                                 break;
                         }
                     }
@@ -95,7 +96,7 @@ namespace DigitalLabels.Import.Factories
                     var url = PathFactory.GetUrlPath(irn, FileFormatType.Jpg);
 
                     // Now we work out what the media is
-                    if (repositorys != null && repositorys.Any(x => x == "Indigenous Images" || x == "Indigenous Online Images Square"))
+                    if (repositorys != null && repositorys.Any(x => x == "Indigenous Online Images Square"))
                     {
                         var thumbnailType = MediaHelper.GetStandingStrongThumbnailType(fileStream);
 
@@ -106,7 +107,7 @@ namespace DigitalLabels.Import.Factories
                                     Irn = irn,
                                     DateModified = dateModified,
                                     Url = url,
-                                    Type = thumbnailType
+                                    Type = thumbnailType.ToString()
                                 };
                         }
                     }

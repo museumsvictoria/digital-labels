@@ -8,7 +8,7 @@ namespace DigitalLabels.Core.DomainModels
 
         public string Url { get; set; }
 
-        public StandingStrongThumbnailType Type { get; set; }
+        public string Type { get; set; }
 
         public DateTime DateModified { get; set; }
     }
