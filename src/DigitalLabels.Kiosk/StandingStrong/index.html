@@ -4,27 +4,19 @@
     <meta charset="utf-8">
     <title>Standing Strong</title>
     <link rel="stylesheet" href="css/css.css">
-    <link rel="stylesheet" href="css/idangerous.swiper.css">
 </head>
 <body>
 <div id="progress">
 </div>
 <div id="details">
 </div>
-<div class="swiper-container swiper-grid">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide">
-      <div id="grid">
-      </div>
+<div class="grid-wrapper">
+    <div id="grid">
     </div>
-  </div>
-  <div class="swiper-scrollbar"></div>
 </div>
 <script src="js/jquery-2.0.3.min.js"></script>
 <script src="js/packery.pkgd.js"></script>
 <script src="js/imagesloaded.pkgd.js"></script>
-<script src="js/idangerous.swiper-2.0.js"></script>
-<script src="js/idangerous.swiper.scrollbar-2.0.js"></script>
 <script src="js/handlebars.js"></script>
 <script>
   $(document).ready(function() {
@@ -35,52 +27,31 @@
     var grid = $('#grid');
 
     $('#progress').text('fetching data');
+
     $.getJSON(digitalLabelsAPI).done(function( data ) {
         $('#progress').text('done fetching data');
-        var gridSwiper;
+        
         // Build grid
         for (var i=0;i<data.length;i++)
         {
             var newLabel = $(labelTemplate(data[i])).data('index', i);
 
             newLabel.on('click', function() {                
-                if(gridSwiper.positions.abs == 0) {
                     details.html(detailsTemplate(data[$(this).data('index')]));
 
                     details
                     .html(detailsTemplate(data[$(this).data('index')]))
                     .imagesLoaded(function() { 
-                        details.show(); 
-
-                        var textHeight = $('.swiper-text .text').height();
-                        var containerHeight = $('.swiper-container.swiper-text').height();                    
-
-                        if(textHeight > containerHeight)
-                        {
-                            var textSwiper = new Swiper('.swiper-text', {
-                                scrollContainer: true,
-                                mousewheelControl: false,
-                                mode:'vertical',
-                                //Enable Scrollbar
-                                scrollbar: {
-                                  container :'.swiper-text .swiper-scrollbar',
-                                  hide: false,
-                                  draggable: false  
-                                }
-                            })
-                        }
-
-                        var imgHeight = $('#details').height() - ($('.header').outerHeight(true) + $('.credits').outerHeight(true) + $('.swiper-text').outerHeight(true));                        
-                        $('.image img').css('max-height', imgHeight);                        
+                        details.show();
                     });
 
-                    $('.back').on('click', function() {
+                    $('.close').on('click', function() {
                         details.hide();
                     });
-                }
             });
 
             grid.append(newLabel);
+
             if(i == 0)
                 grid.append(labelTemplate({ Thumbnail: { Type: "full", Url: "assets/logo.jpg" }}))
         }
@@ -92,17 +63,6 @@
         .imagesLoaded()
         .always(function(i) {
             $('#progress').hide();
-
-            gridSwiper = new Swiper('.swiper-grid', {
-                scrollContainer: true,
-                mousewheelControl: false,
-                mode:'vertical',
-                scrollbar: {
-                  container :'.swiper-grid .swiper-scrollbar',
-                  hide: false,
-                  draggable: false 
-                }
-            });
 
             $('#grid').packery({
                itemSelector: '.label',
@@ -125,19 +85,16 @@
     {{/if}}
 </script>
 <script id="details-template" type="text/x-handlebars-template">
-<div class="header">
-    <div class="back">
-        <div class="arrow-left"></div>
+<div class="details-container">
+    <div class="header">
+        <div class="close"></div>
+        <div class="title">{{Image.Description}}</div>
     </div>
-    <div class="title">{{Image.Description}}</div>
-</div>
-<div class="image">
-    <img src="{{Image.Url}}" />
-    <div class="credits">Photographer - {{Image.Photographer}}, Source - {{Image.Source}}</div>
-</div>
-<div class="swiper-container swiper-text">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide">
+    <div class="image">
+        <img src="{{Image.Url}}" />
+        <div class="credits">Photographer - {{Image.Photographer}}, Source - {{Image.Source}}</div>
+    </div>
+    <div class="text-wrapper">
         <div class="text">
             {{#if Quote}}
             <div class="quote">{{Quote}}</div>
@@ -148,8 +105,6 @@
             <div class="story">{{Story}}</div>
         </div>
     </div>
-  </div>
-  <div class="swiper-scrollbar"></div>
 </div>
 </script>
 </body>

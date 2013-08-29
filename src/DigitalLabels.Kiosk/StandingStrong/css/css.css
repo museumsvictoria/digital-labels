@@ -1,4 +1,8 @@
-/* general styles */
+/* global styles */
+* {
+  -webkit-user-drag: none;
+  -webkit-user-select: none; 
+}
 body {
 margin: 0;
 padding: 0;
@@ -6,13 +10,8 @@ width: 768px;
 font-family: Univers;
 color: #fff;
 background: #000;
--webkit-user-select: none;
+overflow-x: hidden;
 }
-
-html{
-	background: #fff;
-}
-
 @font-face {
   font-family: Univers;
   src: url("../assets/UniversCom-45Light.ttf");
@@ -21,14 +20,37 @@ html{
   font-family: IdealSans;
   src: url("../assets/IdealSans-Book-Pro.otf");
 }
+#progress {
+  font-size: 25px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-shadow:0px 0px 3px #000;
+}
 
 /* photo grid styles */
+.grid-wrapper {
+  height: 1024px;
+  width: 768px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.grid-wrapper::-webkit-scrollbar-track
+{   
+  margin: 11px 0 11px;
+}
+.grid-wrapper::-webkit-scrollbar
+{
+  width: 9px;
+}
+.grid-wrapper::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background: #c7940d;
+}
 #grid {
   background: #000;
-  max-width: 757px;
-  margin-left: 11px;
-  padding-top: 11px;
-  padding-bottom: 11px;
+  margin: 11px 0 11px 11px;
 }
 #grid:after {
   content: '';
@@ -39,10 +61,10 @@ html{
   float: left;
 }
 .logo img {
-  display: block;
+  display: block;  
 }
 .label {
-  float: left;
+  float: left;  
 }
 .label img {
   display: block;
@@ -64,7 +86,6 @@ html{
   height: 230px;
 }
 
-
 /* image detail styles */
 #details {
   display: none;
@@ -76,84 +97,88 @@ html{
   left: 0;
   background: #000 top left no-repeat url('../assets/bg_details.jpg');
 }
-
-
-/* header styles */
-#details .header {
-  background: #c7940d;
-  /*min-height: 52px;
-  max-height: 100px;*/
-  min-height: 115px;
-  margin: 0 0 20px;
+.details-container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content:space-between;
+  height: 100%;
 }
 
-#details .header .title {
+/* header styles */
+.header {
+  background: #c7940d;
+  order: 1;
+  flex: 1 1 auto;
+  width: 100%;
+  max-height:142px;
+}
+
+.header .title {
   color: #573905;
   font-family: IdealSans;
   font-size: 24px;
   width: 600px;
   margin: 0 auto;
-  padding: 40px 0 17px;
+  padding: 40px 0 15px;
 }
-
-#details .back {
+.close {
   position: absolute;
-  right: 11px;
-  top: 11px;
-  height: 30px;
-  width: 30px;
-  background: #3b3b3b;
+  right: 20px;
+  top: 20px;
+  height: 50px;
+  width: 50px;
+  background: #3b3b3b url('../assets/bg_close.png') no-repeat center center;
 }
 
-#details .back .arrow-left {
-  width: 0; 
-  height: 0; 
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;   
-  border-right: 11px solid #fff;
-  position: absolute;
-  top: 6px;
-  left: 8px;
+/* image styles */
+.image {  
+  order: 2;
+  flex:1 1 auto;
 }
-
-
-
-
-#details .image {
-  text-align: center;
-  
-}
-
-#details .image img {
-  margin: 0 auto;
-  max-height: 500px;
+.image img {
   max-width: 728px;
-  display: block;
+  max-height: 500px;
+  margin: 20px auto 5px;
+  display:block;
 }
-
-#details .text {
-  width: 600px;
-  margin: 15px auto;
-}
-
-#details .credits {
+.credits {
   color: #fff;
-  width: 600px;
-  margin: 5px auto 15px;
   font-size: 12px;
-  height: 15px;
-  text-align: left;
 }
 
-#details .quote {
+/* text styles */
+.text-wrapper {
+  order: 3;
+  overflow-y:scroll;
+  margin-right: 66px;
+  padding:0 9px 0 84px;
+  flex:1 1 300px;
+}
+.text-wrapper::-webkit-scrollbar-track
+{   
+  margin:0 0 20px;
+}
+.text-wrapper::-webkit-scrollbar
+{
+  width: 9px;
+}
+.text-wrapper::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background: #c7940d;
+}
+.text {
+  padding: 0 0 20px;
+}
+.quote {
   margin: 0 0 20px;  
   font-family: IdealSans;
-  font-size: 24px;
+  font-size: 26px;
   color: #6f625a;
-  
   position: relative;
 }
-#details .quote:after {
+.quote:after {
   content: '‘';
   display: block;
   position: absolute;
@@ -161,12 +186,11 @@ html{
   left: -40px;
   font-size: 130px;
 }
-
 .quote-source {
-  font-size: 18px;
+  font-size: 20px;
   margin: 0 0 20px;
 }
-
-#details .story {
+.story {
   color: #fff;
+  font-size: 16px;
 }
