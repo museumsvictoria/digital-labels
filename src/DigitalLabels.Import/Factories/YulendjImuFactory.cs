@@ -17,6 +17,7 @@ namespace DigitalLabels.Import.Factories
                        "NarTitle",
                        "NarNarrative",
                        "IntInterviewNotes_tab",
+                       "lastname=IntIntervieweeRef_tab.(NamLast)",
                        "media=MulMultiMediaRef_tab.(irn,resource,MulTitle,MulMimeType,MdaDataSets_tab,MdaElement_tab,MdaQualifier_tab,MdaFreeText_tab,ChaRepository_tab,AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified)",
                        "AdmDateModified",
                        "AdmTimeModified"

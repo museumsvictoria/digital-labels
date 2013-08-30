@@ -28,6 +28,9 @@ namespace DigitalLabels.Import.Factories
             newLabel.Name = map.GetString("NarTitle");
             newLabel.Biography = map.GetString("NarNarrative");
             newLabel.Quote = map.GetStrings("IntInterviewNotes_tab").FirstOrDefault();
+            var lastname = map.GetMaps("lastname").FirstOrDefault();
+            if (lastname != null)
+                newLabel.Order = lastname.GetString("NamLast");
 
             // Media
             var medias = map.GetMaps("media");

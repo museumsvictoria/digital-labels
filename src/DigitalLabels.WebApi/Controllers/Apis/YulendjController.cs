@@ -32,6 +32,7 @@ namespace DigitalLabels.WebApi.Controllers.Apis
             return _documentSession
                 .Query<YulendjLabel, YulendjLabel_All>()
                 .GetAllResultsWithPaging()
+                .OrderBy(x => x.Order)
                 .ToList();
         }
 

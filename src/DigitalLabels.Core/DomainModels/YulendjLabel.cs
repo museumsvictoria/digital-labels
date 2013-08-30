@@ -17,5 +17,7 @@ namespace DigitalLabels.Core.DomainModels
         public YulendjImage TexturePanelImage { get; set; }
 
         public DateTime DateModified { get; set; }
+
+        public string Order { get; set; }
     }
 }

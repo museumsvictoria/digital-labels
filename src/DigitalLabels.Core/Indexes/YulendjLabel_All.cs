@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DigitalLabels.Core.DomainModels;
+using Raven.Abstractions.Indexing;
 using Raven.Client.Indexes;
 
 namespace DigitalLabels.Core.Indexes
@@ -10,6 +11,8 @@ namespace DigitalLabels.Core.Indexes
         {
             Map = labels => from label in labels
                             select new { };
+
+            Sort(x => x.Order, SortOptions.String);
         }
     }
 }
