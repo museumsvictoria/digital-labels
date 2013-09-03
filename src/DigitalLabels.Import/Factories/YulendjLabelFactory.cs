@@ -75,13 +75,6 @@ namespace DigitalLabels.Import.Factories
                         }
                     }
 
-                    var resizeSettings = new ResizeSettings
-                        {
-                            Format = FileFormatType.Jpg.ToString(),
-                            MaxHeight = 750,
-                            MaxWidth = 500,
-                            Quality = 90
-                        };
                     var url = PathFactory.GetUrlPath(irn, FileFormatType.Jpg);
                     var image = new YulendjImage
                         {
@@ -96,14 +89,26 @@ namespace DigitalLabels.Import.Factories
                     // Now we work out what the media is
                     if (imageType == "portrait")
                     {
-                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, new ResizeSettings
+                        {
+                            Format = FileFormatType.Jpg.ToString(),
+                            MaxHeight = 750,
+                            MaxWidth = 500,
+                            Quality = 90
+                        }))
                         {
                             newLabel.ProfileImage = image;
                         }
                     }
                     else if (imageType == "texture")
                     {
-                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
+                        if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, new ResizeSettings
+                        {
+                            Format = FileFormatType.Jpg.ToString(),
+                            MaxHeight = 750,
+                            MaxWidth = 750,
+                            Quality = 90
+                        }))
                         {
                             newLabel.TexturePanelImage = image;
                         }

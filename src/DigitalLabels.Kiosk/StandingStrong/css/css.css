@@ -151,8 +151,8 @@ overflow-x: hidden;
 .text-wrapper {
   order: 3;
   overflow-y:scroll;
-  margin-right: 66px;
-  padding:0 9px 0 84px;
+  margin-right: 50px;
+  padding:0 34px 0 84px;
   flex:1 1 300px;
 }
 .text-wrapper::-webkit-scrollbar-track
@@ -187,8 +187,9 @@ overflow-x: hidden;
   font-size: 130px;
 }
 .quote-source {
-  font-size: 20px;
-  margin: 0 0 20px;
+  font-size: 18px;
+  margin: 0 0 37px;
+  color: #6f625a;
 }
 .story {
   color: #fff;
