@@ -35,7 +35,7 @@ namespace DigitalLabels.Import.Factories
                 var interviewee = string.Empty;
                 if (intervieweeMap != null)
                 {
-                    interviewee = intervieweeMap.GetString("NamFullName");
+                    interviewee = string.Format("{0} {1}", intervieweeMap.GetString("NamFirst"), intervieweeMap.GetString("NamLast")).Trim();
                 }
 
                 newLabel.Quote = interview.GetString("IntInterviewNotes_tab");

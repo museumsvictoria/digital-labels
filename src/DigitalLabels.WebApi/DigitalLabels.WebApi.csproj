@@ -165,6 +165,7 @@
     </Compile>
     <Compile Include="Controllers\Apis\ManyNationsController.cs" />
     <Compile Include="Controllers\Apis\ResponseController.cs" />
+    <Compile Include="Controllers\KioskController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Infrastructure\ApiDocAttribute.cs" />
     <Compile Include="Infrastructure\ApiDocumentationProvider.cs" />
@@ -177,7 +178,15 @@
     <Compile Include="ViewModels\HelpViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\bg_close.png" />
+    <Content Include="assets\bg_details.jpg" />
+    <Content Include="assets\logo.jpg" />
+    <Content Include="css\standingstrong\style.css" />
     <Content Include="css\style.css" />
+    <Content Include="js\standingstrong\handlebars.js" />
+    <Content Include="js\standingstrong\imagesloaded.pkgd.js" />
+    <Content Include="js\standingstrong\jquery-2.0.3.min.js" />
+    <Content Include="js\standingstrong\packery.pkgd.js" />
     <Content Include="Web.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -193,6 +202,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\kiosk\StandingStrong.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="assets\IdealSans-Book-Pro.otf" />
+    <Content Include="assets\UniversCom-45Light.ttf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

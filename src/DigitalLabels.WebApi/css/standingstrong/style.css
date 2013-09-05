@@ -14,11 +14,11 @@ overflow-x: hidden;
 }
 @font-face {
   font-family: Univers;
-  src: url("../assets/UniversCom-45Light.ttf");
+  src: url("../../assets/standingstrong/UniversCom-45Light.ttf");
 }
 @font-face {
   font-family: IdealSans;
-  src: url("../assets/IdealSans-Book-Pro.otf");
+  src: url("../../assets/standingstrong/IdealSans-Book-Pro.otf");
 }
 #progress {
   font-size: 25px;
@@ -95,7 +95,7 @@ overflow-x: hidden;
   position: fixed;
   top: 0;
   left: 0;
-  background: #000 top left no-repeat url('../assets/bg_details.jpg');
+  background: #000 top left no-repeat url('../../assets/standingstrong/bg_details.jpg');
 }
 .details-container {
   display: flex;
@@ -128,7 +128,7 @@ overflow-x: hidden;
   top: 20px;
   height: 50px;
   width: 50px;
-  background: #3b3b3b url('../assets/bg_close.png') no-repeat center center;
+  background: #3b3b3b url('../../assets/standingstrong/bg_close.png') no-repeat center center;
 }
 
 /* image styles */
