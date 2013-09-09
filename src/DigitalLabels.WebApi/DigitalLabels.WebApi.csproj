@@ -204,7 +204,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\kiosk\StandingStrong.cshtml" />
+    <Content Include="Views\Kiosk\StandingStrong.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\IdealSans-Book-Pro.otf" />

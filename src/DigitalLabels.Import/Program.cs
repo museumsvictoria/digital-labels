@@ -53,7 +53,7 @@ namespace DigitalLabels.Import
                     application.RunDataImport();
                     documentSession.SaveChanges();
                     documentSession.Dispose();
-
+                                        
                     RunManyNationsImport();
                     RunGenerationsImport();
                     RunYulendjImport();
@@ -162,19 +162,19 @@ namespace DigitalLabels.Import
 
         private static void RunGenerationsImport()
         {
-            _log.Debug("Begining Generations import");
-
-            var labels = new List<GenerationsLabel>();
+            var primaryLabels = new List<GenerationsLabel>();
             var supportingImages = new List<GenerationsQuote>();
 
             #region data
+
+            _log.Debug("Begining Generations (primary) import");
 
             // Get search ready
             var catalogue = new Module("ecatalogue", _session);
 
             // Perform search
             var stopwatch = Stopwatch.StartNew();
-            var hits = catalogue.FindTerms(GenerationsImuFactory.GetImportTerms());
+            var hits = catalogue.FindTerms(GenerationsImuFactory.GetPrimaryImportTerms());
             stopwatch.Stop();
             _log.Debug("Finished Catalogue Emu Search in {0:#,#} ms. {1} Hits", stopwatch.ElapsedMilliseconds, hits);
 
@@ -191,29 +191,60 @@ namespace DigitalLabels.Import
                         return;
                     }
 
-                    var results = catalogue.Fetch("start", count, Constants.DataBatchSize, GenerationsImuFactory.GetImportColumns());
+                    var results = catalogue.Fetch("start", count, Constants.DataBatchSize, GenerationsImuFactory.GetPrimaryImportColumns());
 
                     //Create Images/Labels
-                    foreach (var map in results.Rows)
-                    {
-                        if (string.IsNullOrWhiteSpace(map.GetString("ClaTertiaryClassification")))
-                            supportingImages.Add(GenerationsLabelFactory.MakeQuote(map));
-                        else
-                            labels.Add(GenerationsLabelFactory.MakeLabel(map));
-                    }
+                    primaryLabels.AddRange(results.Rows.Select(GenerationsLabelFactory.MakeLabel));
 
                     if (results.Count == 0)
                         break;
 
                     count += results.Count;
-                    _log.Debug("Generations Label import progress... {0}/{1}", count, hits);
+                    _log.Debug("Generations (primary) Label import progress... {0}/{1}", count, hits);
+                }
+            }
+
+            _log.Debug("Begining Generations (supporting) import");
+
+            // Get search ready
+            var narrative = new Module("enarratives", _session);
+
+            // Perform search
+            stopwatch = Stopwatch.StartNew();
+            hits = narrative.FindTerms(GenerationsImuFactory.GetSupportingImportTerms());
+            stopwatch.Stop();
+            _log.Debug("Finished Narrative Emu Search in {0:#,#} ms. {1} Hits", stopwatch.ElapsedMilliseconds, hits);
+
+            count = 0;
+            stopwatch = Stopwatch.StartNew();
+
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+                    {
+                        _log.Debug("Cancel command recieved stopping Data import");
+                        return;
+                    }
+
+                    var results = narrative.Fetch("start", count, Constants.DataBatchSize, GenerationsImuFactory.GetSupportingImportColumns());
+
+                    //Create Images/Labels
+                    supportingImages.AddRange(results.Rows.Select(GenerationsLabelFactory.MakeSupportingQuote));
+
+                    if (results.Count == 0)
+                        break;
+
+                    count += results.Count;
+                    _log.Debug("Generations (supporting) Label import progress... {0}/{1}", count, hits);
                 }
             }
 
             // Arrange images into labels.
-            foreach (var label in labels)
+            foreach (var primaryLabel in primaryLabels)
             {
-                label.SupportingQuotes = supportingImages.Where(x => x.PrimaryImageNarrativeIrn == label.PrimaryQuote.NarrativeIrn).ToList();
+                primaryLabel.SupportingQuotes = supportingImages.Where(x => x.PrimaryImageNarrativeIrn == primaryLabel.PrimaryQuote.NarrativeIrn).ToList();
             }
 
             #endregion
@@ -233,9 +264,9 @@ namespace DigitalLabels.Import
 
             using (var bulkInsert = _documentStore.BulkInsert())
             {
-                foreach (var label in labels)
+                foreach (var primaryLabel in primaryLabels)
                 {
-                    bulkInsert.Store(label);
+                    bulkInsert.Store(primaryLabel);
                 }
             }
 

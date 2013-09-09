@@ -39,8 +39,6 @@ namespace DigitalLabels.Core.DomainModels
 
         public GenerationsImage Image { get; set; }
 
-        public MediaAsset Thumbnail { get; set; }
-
         public DateTime DateModified { get; set; }        
     }
 }
