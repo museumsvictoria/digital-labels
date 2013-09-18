@@ -24,6 +24,11 @@
 <script src="/js/standingstrong/handlebars.js"></script>
 <script>
     $(document).ready(function () {
+        $(document).bind("contextmenu", function (e) {
+            e.preventDefault();
+            return false;
+        });
+
         var labelTemplate = Handlebars.compile($("#label-template").html());
         var detailsTemplate = Handlebars.compile($("#details-template").html());
         var digitalLabelsApi = "/api/standingstrong?json=true";
