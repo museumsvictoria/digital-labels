@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Indexes;
 using DigitalLabels.Core.Infrastructure;
@@ -54,7 +55,7 @@ namespace DigitalLabels.Import
                     documentSession.SaveChanges();
                     documentSession.Dispose();
                                         
-                    RunManyNationsImport();
+                    RunManyNationsImport();                    
                     RunGenerationsImport();
                     RunYulendjImport();
                     RunStandingStrongImport();
@@ -136,7 +137,7 @@ namespace DigitalLabels.Import
             #region persist
 
             _log.Debug("Deleting existing Many Nations labels");
-
+            
             // Delete all existing data
             using (var documentSession = _documentStore.OpenSession())
             {
@@ -144,8 +145,28 @@ namespace DigitalLabels.Import
                 documentSession.SaveChanges();
             }
 
+            // Ensure we delete all labels
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    RavenQueryStatistics statistics;
+                    documentSession.Query<ManyNationsLabel>()
+                                   .Statistics(out statistics)
+                                   .ToArray();
+
+                    if (statistics.TotalResults == 0)
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(200);
+                }
+            }
+
             _log.Debug("Saving Many Nations labels");
 
+            // Insert new labels
             using (var bulkInsert = _documentStore.BulkInsert())
             {
                 foreach (var label in labels)
@@ -260,8 +281,28 @@ namespace DigitalLabels.Import
                 documentSession.SaveChanges();
             }
 
+            // Ensure we delete all labels
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    RavenQueryStatistics statistics;
+                    documentSession.Query<GenerationsLabel>()
+                                   .Statistics(out statistics)
+                                   .ToArray();
+
+                    if (statistics.TotalResults == 0)
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(200);
+                }
+            }
+
             _log.Debug("Saving Generations labels");
 
+            // Insert new labels
             using (var bulkInsert = _documentStore.BulkInsert())
             {
                 foreach (var primaryLabel in primaryLabels)
@@ -335,8 +376,28 @@ namespace DigitalLabels.Import
                 documentSession.SaveChanges();
             }
 
+            // Ensure we delete all labels
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    RavenQueryStatistics statistics;
+                    documentSession.Query<YulendjLabel>()
+                                   .Statistics(out statistics)
+                                   .ToArray();
+
+                    if (statistics.TotalResults == 0)
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(200);
+                }
+            }
+
             _log.Debug("Saving Yulendj labels");
 
+            // Insert new labels
             using (var bulkInsert = _documentStore.BulkInsert())
             {
                 foreach (var label in labels)
@@ -409,6 +470,26 @@ namespace DigitalLabels.Import
                 _documentStore.DatabaseCommands.DeleteByIndex("StandingStrongLabel/All", new IndexQuery(), false);
                 documentSession.SaveChanges();
             }
+
+            // Ensure we delete all labels
+            while (true)
+            {
+                using (var documentSession = _documentStore.OpenSession())
+                {
+                    RavenQueryStatistics statistics;
+                    documentSession.Query<StandingStrongLabel>()
+                                   .Statistics(out statistics)
+                                   .ToArray();
+
+                    if (statistics.TotalResults == 0)
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(200);
+                }
+            }
+
 
             _log.Debug("Saving Standing Strong labels");
 
