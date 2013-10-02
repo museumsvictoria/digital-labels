@@ -97,7 +97,7 @@ namespace DigitalLabels.Import.Factories
                 var primary = material.GetString("MatPrimaryMaterials_tab");
                 var tertiary = material.GetString("MatTertiaryMaterials_tab");
 
-                if(primary.Contains("Bunjilaka Material"))
+                if (primary != null && primary.Contains("Bunjilaka Material"))
                 {
                     newLabel.Materials = (newLabel.Materials == null) ? tertiary : newLabel.Materials + ", " + tertiary;
                 }
