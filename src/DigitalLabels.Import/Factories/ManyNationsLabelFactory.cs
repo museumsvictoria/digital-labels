@@ -113,7 +113,7 @@ namespace DigitalLabels.Import.Factories
             
             // Narrative
             var narrative = map.GetMaps("narrative")
-                .FirstOrDefault(x => x.GetStrings("DetPurpose_tab").Any(y => y.Contains("Bunjilaka Many Nations Digital Label")) && x.GetString("AdmPublishWebNoPassword") == "Yes");
+                .FirstOrDefault(x => x.GetStrings("DetPurpose_tab").Any(y => y.Contains("Bunjilaka Many Nations Digital Label")) && string.Equals(x.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase));
 
             if (narrative != null)
             {
@@ -140,7 +140,9 @@ namespace DigitalLabels.Import.Factories
                 newLabel.Images = new List<ManyNationsImage>();
                 foreach (var media in medias)
                 {
-                    if (media != null && media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                    if (media != null && 
+                        string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) && 
+                        media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                     {
                         var irn = long.Parse(media.GetString("irn"));
                         var type = media.GetString("MulMimeType");

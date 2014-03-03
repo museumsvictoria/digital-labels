@@ -52,7 +52,9 @@ namespace DigitalLabels.Import.Factories
             var medias = map.GetMaps("media");
             foreach (var media in medias)
             {
-                if (media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                if (media != null && 
+                    string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) && 
+                    media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                 {
                     var irn = long.Parse(media.GetString("irn"));
                     var type = media.GetString("MulMimeType");

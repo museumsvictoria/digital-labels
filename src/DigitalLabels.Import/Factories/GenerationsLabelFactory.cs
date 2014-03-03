@@ -87,7 +87,9 @@ namespace DigitalLabels.Import.Factories
             var medias = map.GetMaps("media");
             foreach (var media in medias)
             {
-                if (media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                if (media != null &&
+                    string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) &&
+                    media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                 {
                     var irn = long.Parse(media.GetString("irn"));
                     var type = media.GetString("MulMimeType");
@@ -166,7 +168,7 @@ namespace DigitalLabels.Import.Factories
 
             // Narrative
             var narrative = map.GetMaps("narrative")
-                .FirstOrDefault(x => x.GetStrings("DetPurpose_tab").Any(y => y.Contains("Exhibition - Bunjilaka Generations Digital Label")) && x.GetString("AdmPublishWebNoPassword") == "Yes" && x.GetString("NarTitle").ToLower().Contains("primary"));
+                .FirstOrDefault(x => x.GetStrings("DetPurpose_tab").Any(y => y.Contains("Exhibition - Bunjilaka Generations Digital Label")) && string.Equals(x.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) && x.GetString("NarTitle").ToLower().Contains("primary"));
 
             if (narrative != null)
             {
@@ -240,7 +242,9 @@ namespace DigitalLabels.Import.Factories
             var medias = map.GetMaps("media");
             foreach (var media in medias)
             {
-                if (media.GetString("AdmPublishWebNoPassword") == "Yes" && media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                if (media != null && 
+                    string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) && 
+                    media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
                 {
                     var irn = long.Parse(media.GetString("irn"));
                     var type = media.GetString("MulMimeType");
