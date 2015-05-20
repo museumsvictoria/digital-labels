@@ -43,7 +43,7 @@ namespace DigitalLabels.Import.Factories
 
             // Language Name
             if (!string.IsNullOrWhiteSpace(map.GetString("DesLocalName")))
-                newLabel.LanguageName = map.GetString("DesLocalName").Replace("(Bunjilaka Project 2012)", "").Trim();
+                newLabel.LanguageName = HtmlConverter.HtmlToText(map.GetString("DesLocalName").Replace("(Bunjilaka Project 2012)", "").Trim());
 
             // Associations
             foreach (var association in map.GetMaps("associations"))
