@@ -10,4 +10,4 @@ The Digital Labels project is a simple self documenting Web API for delivering d
 ## How do I use it?
 The Digital Labels source code has been provided for those curious in how it has been put together as there is a dependency on Museum Victoria’s particular flavour of Collection Management which supplies the data that runs the site.  Please feel free to look at and re-use any parts of the code but don’t expect a self-contained project.
 
-**Developer:** Michael Mason (mmason@museumvictoria.com.au)
+**Developer:** Michael Mason
