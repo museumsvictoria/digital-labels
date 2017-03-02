@@ -6,7 +6,7 @@ namespace DigitalLabels.Import.Utilities
     {
         public static int FindLongestLength(params string[][] lists)
         {
-            return lists == null ? -1 : lists.Max(x => x.Count());
+            return lists?.Max(x => x.Length) ?? -1;
         }
     }
 }

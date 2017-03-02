@@ -26,6 +26,7 @@
     <SccProvider>SAK</SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -178,9 +179,9 @@
     <Compile Include="ViewModels\HelpViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\bg_close.png" />
-    <Content Include="assets\bg_details.jpg" />
-    <Content Include="assets\logo.jpg" />
+    <Content Include="assets\standingstrong\bg_close.png" />
+    <Content Include="assets\standingstrong\bg_details.jpg" />
+    <Content Include="assets\standingstrong\logo.jpg" />
     <Content Include="css\standingstrong\style.css" />
     <Content Include="css\style.css" />
     <Content Include="js\standingstrong\handlebars.js" />
@@ -207,8 +208,8 @@
     <Content Include="Views\Kiosk\StandingStrong.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="assets\IdealSans-Book-Pro.otf" />
-    <Content Include="assets\UniversCom-45Light.ttf" />
+    <Content Include="assets\standingstrong\IdealSans-Book-Pro.otf" />
+    <Content Include="assets\standingstrong\UniversCom-45Light.ttf" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
