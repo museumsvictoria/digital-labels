@@ -5,43 +5,43 @@ namespace DigitalLabels.Core.DomainModels
 {
     public class Application : DomainModel
     {
-        public DateTime LastDataImport { get; private set; }
+        public DateTime? LastCompleted { get; private set; }
 
-        public bool DataImportRunning { get; private set; }
+        public bool TasksRunning { get; private set; }
 
-        public bool DataImportCancelled { get; private set; }
+        public bool TasksCancelled { get; private set; }
 
         public Application()
         {
             Id = Constants.ApplicationId;
         }
 
-        public void RunDataImport()
+        public void ExecuteTasks()
         {
-            if (!DataImportRunning)
+            if (!TasksRunning)
             {
-                DataImportRunning = true;
+                TasksRunning = true;
             }
         }
 
-        public void DataImportFinished()
+        public void TasksComplete()
         {
-            DataImportRunning = false;
-            DataImportCancelled = false;
+            TasksRunning = false;
+            TasksCancelled = false;
         }
 
-        public void DataImportSuccess(DateTime dateCompleted)
+        public void TasksSuccessful(DateTime completed)
         {
-            DataImportRunning = false;
-            DataImportCancelled = false;
-            LastDataImport = dateCompleted;
+            TasksRunning = false;
+            TasksCancelled = false;
+            LastCompleted = completed;
         }
 
-        public void CancelDataImport()
+        public void CancelTasks()
         {
-            if (DataImportRunning)
+            if (TasksRunning)
             {
-                DataImportCancelled = true;
+                TasksCancelled = true;
             }
         }
     }

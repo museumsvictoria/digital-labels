@@ -1,4 +1,5 @@
 ﻿using DigitalLabels.Import.Config;
+using DigitalLabels.Import.Infrastructure;
 
 namespace DigitalLabels.Import
 {
@@ -16,6 +17,9 @@ namespace DigitalLabels.Import
 
             // Configure DI container
             var container = ContainerConfig.Initialize();
+
+            // Run all tasks
+            container.GetInstance<TaskRunner>().ExecuteAll();
         }
 
         //private static void Import()
@@ -33,7 +37,7 @@ namespace DigitalLabels.Import
         //        if (application == null)
         //            throw new ApplicationNotFoundException();
 
-        //        if (!application.DataImportRunning)
+        //        if (!application.TasksRunning)
         //        {
         //            application.RunDataImport();
         //            documentSession.SaveChanges();
@@ -55,15 +59,15 @@ namespace DigitalLabels.Import
         //    {
         //        var application = documentSession.Load<Application>(Constants.ApplicationId);
 
-        //        if (application.DataImportCancelled || hasFailed)
+        //        if (application.TasksCancelled || hasFailed)
         //        {
         //            _log.Debug("Data import finished (cancelled or failed)");
-        //            application.DataImportFinished();
+        //            application.TasksComplete();
         //        }
         //        else
         //        {
         //            _log.Debug("Data import finished succesfully");
-        //            application.DataImportSuccess(dateRun);
+        //            application.TasksSuccessful(dateRun);
         //        }
 
         //        documentSession.SaveChanges();
@@ -94,7 +98,7 @@ namespace DigitalLabels.Import
         //    {
         //        using (var documentSession = _documentStore.OpenSession())
         //        {
-        //            if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+        //            if (documentSession.Load<Application>(Constants.ApplicationId).TasksCancelled)
         //            {
         //                _log.Debug("Cancel command recieved stopping Data import");
         //                return;
@@ -190,7 +194,7 @@ namespace DigitalLabels.Import
         //    {
         //        using (var documentSession = _documentStore.OpenSession())
         //        {
-        //            if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+        //            if (documentSession.Load<Application>(Constants.ApplicationId).TasksCancelled)
         //            {
         //                _log.Debug("Cancel command recieved stopping Data import");
         //                return;
@@ -227,7 +231,7 @@ namespace DigitalLabels.Import
         //    {
         //        using (var documentSession = _documentStore.OpenSession())
         //        {
-        //            if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+        //            if (documentSession.Load<Application>(Constants.ApplicationId).TasksCancelled)
         //            {
         //                _log.Debug("Cancel command recieved stopping Data import");
         //                return;
@@ -325,7 +329,7 @@ namespace DigitalLabels.Import
         //    {
         //        using (var documentSession = _documentStore.OpenSession())
         //        {
-        //            if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+        //            if (documentSession.Load<Application>(Constants.ApplicationId).TasksCancelled)
         //            {
         //                _log.Debug("Cancel command recieved stopping Data import");
         //                return;
@@ -420,7 +424,7 @@ namespace DigitalLabels.Import
         //    {
         //        using (var documentSession = _documentStore.OpenSession())
         //        {
-        //            if (documentSession.Load<Application>(Constants.ApplicationId).DataImportCancelled)
+        //            if (documentSession.Load<Application>(Constants.ApplicationId).TasksCancelled)
         //            {
         //                _log.Debug("Cancel command recieved stopping Data import");
         //                return;

@@ -59,9 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ApplicationManager.cs" />
     <Compile Include="Config\Constants.cs" />
-    <Compile Include="Config\IApplicationManager.cs" />
     <Compile Include="DomainModels\Application.cs" />
     <Compile Include="DomainModels\StandingStrongThumbnail.cs" />
     <Compile Include="DomainModels\StandingStrongThumbnailType.cs" />

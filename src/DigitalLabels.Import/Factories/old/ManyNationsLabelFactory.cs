@@ -76,9 +76,9 @@
 //                    case "Place Made":
 //                        var locality = association.GetString("AssAssociationLocality_tab");
 //                        var state = association.GetString("AssAssociationState_tab");
-//                        newLabel.PlaceMade = new[]{ locality, state }.Concatenate(", ");
+//                        newLabel.PlaceMade = new[] { locality, state }.Concatenate(", ");
 //                        // Also state.
-//                        if(!string.IsNullOrWhiteSpace(state))
+//                        if (!string.IsNullOrWhiteSpace(state))
 //                            newLabel.State = state;
 //                        break;
 //                    case "Indigenous Region":
@@ -105,12 +105,12 @@
 
 //            // Exhibition Objects
 //            var collectionObject = map.GetMaps("collobjs").FirstOrDefault(x => x.GetString("StaGridCode") == "First People - Many Nations");
-//            if(collectionObject != null)
+//            if (collectionObject != null)
 //            {
 //                newLabel.Case = collectionObject.GetString("StaCase");
 //                newLabel.Segment = collectionObject.GetString("StaSegmentName").Replace(@"Many Nations - ", "").Trim();
 //            }
-            
+
 //            // Narrative
 //            var narrative = map.GetMaps("narrative")
 //                .FirstOrDefault(x => x.GetStrings("DetPurpose_tab").Any(y => y.Contains("Bunjilaka Many Nations Digital Label")) && string.Equals(x.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase));
@@ -140,8 +140,8 @@
 //                newLabel.Images = new List<ManyNationsImage>();
 //                foreach (var media in medias)
 //                {
-//                    if (media != null && 
-//                        string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) && 
+//                    if (media != null &&
+//                        string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) &&
 //                        media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
 //                    {
 //                        var irn = long.Parse(media.GetString("irn"));
@@ -216,7 +216,7 @@
 //                            }
 //                        }
 //                        else if (type == "image")
-//                        {                            
+//                        {
 //                            var mediumUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "medium");
 //                            var largeUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "large");
 //                            var mediumResizeSettings = new ResizeSettings
@@ -260,16 +260,16 @@
 //                            if (MediaHelper.Save(fileStream, irn, FileFormatType.Mp4, null))
 //                            {
 //                                newLabel.Video = new ManyNationsVideo
-//                                    {
-//                                        CopyrightHolder = copyrightHolder,
-//                                        Creator = creator,
-//                                        Description = description,
-//                                        Irn = irn,
-//                                        Order = order,
-//                                        Source = source,
-//                                        DateModified = dateModified,
-//                                        Url = url
-//                                    };
+//                                {
+//                                    CopyrightHolder = copyrightHolder,
+//                                    Creator = creator,
+//                                    Description = description,
+//                                    Irn = irn,
+//                                    Order = order,
+//                                    Source = source,
+//                                    DateModified = dateModified,
+//                                    Url = url
+//                                };
 //                            }
 //                        }
 //                    }

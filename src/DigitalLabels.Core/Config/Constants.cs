@@ -2,8 +2,10 @@
 {
     public static class Constants
     {
-        public static string ApplicationId = "applications/digitallabels";
+        public const string ApplicationId = "applications/digitallabels";
 
-        public static int DataBatchSize = 1;
+        public const int DataBatchSize = 100;
+
+        public const int CachedDataBatchSize = 10000;
     }
 }

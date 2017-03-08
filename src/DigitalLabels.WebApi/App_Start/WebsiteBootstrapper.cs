@@ -97,9 +97,6 @@ namespace DigitalLabels.WebApi
 
             // Configure Web Api
             WebApiConfig.Configure();
-
-            // Perform Application setup
-            ServiceLocator.Current.GetInstance<IApplicationManager>().SetupApplication();
         }
     }
 }

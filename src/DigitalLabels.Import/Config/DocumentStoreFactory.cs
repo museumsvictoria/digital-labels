@@ -11,11 +11,11 @@ using Serilog.Events;
 
 namespace DigitalLabels.Import.Config
 {
-    public static class RavenDocumentStoreFactory
+    public static class DocumentStoreFactory
     {
         public static IDocumentStore Create()
         {
-            using (Log.Logger.BeginTimedOperation("Create new instance of DocumentStore", "RavenDocumentStoreFactory.Create", LogEventLevel.Debug))
+            using (Log.Logger.BeginTimedOperation("Create new instance of DocumentStore", "DocumentStoreFactory.Create", LogEventLevel.Debug))
             {
                 // Connect to raven db instance
                 var documentStore = new DocumentStore
@@ -37,9 +37,8 @@ namespace DigitalLabels.Import.Config
 
                     if (application == null)
                     {
-                        Log.Logger.Information("Creating new application document store");
-                        application = new Application();
-                        documentSession.Store(application);
+                        Log.Logger.Information("Creating new application document");
+                        documentSession.Store(new Application());
                     }
 
                     documentSession.SaveChanges();

@@ -17,7 +17,7 @@ namespace DigitalLabels.Import.Utilities
             var sw = new StringWriter();
 
             ConvertTo(doc.DocumentNode, sw);
-            
+
             return sw.ToString();
         }
 
