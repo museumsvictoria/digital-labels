@@ -10,14 +10,14 @@ namespace DigitalLabels.Import.Infrastructure
     public class TaskRunner
     {
         private readonly IEnumerable<ITask> tasks;
-        private readonly IDocumentStore documentStore;
+        private readonly IDocumentStore store;
 
         public TaskRunner(
             IEnumerable<ITask> tasks,
-            IDocumentStore documentStore)
+            IDocumentStore store)
         {
             this.tasks = tasks;
-            this.documentStore = documentStore;
+            this.store = store;
         }
 
         public void ExecuteAll()
@@ -25,8 +25,8 @@ namespace DigitalLabels.Import.Infrastructure
             using (Log.Logger.BeginTimedOperation("Tasks starting", "TaskRunner.RunAllTasks"))
             {
                 var tasksFailed = false;
-                var documentSession = documentStore.OpenSession();
-                var application = documentSession.Load<Application>(Constants.ApplicationId);
+                var session = store.OpenSession();
+                var application = session.Load<Application>(Constants.ApplicationId);
 
                 if (!application.TasksRunning)
                 {
@@ -48,8 +48,8 @@ namespace DigitalLabels.Import.Infrastructure
                         Log.Logger.Error(ex, "Exception occured running export");
                     }
 
-                    documentSession = documentStore.OpenSession();
-                    application = documentSession.Load<Application>(Constants.ApplicationId);
+                    session = store.OpenSession();
+                    application = session.Load<Application>(Constants.ApplicationId);
 
                     if (Program.ImportCanceled || tasksFailed)
                     {

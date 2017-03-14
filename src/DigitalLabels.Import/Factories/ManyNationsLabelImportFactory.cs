@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Extensions;
 using DigitalLabels.Import.Infrastructure;
 using DigitalLabels.Import.Utilities;
+using ImageMagick;
 using IMu;
 using Raven.Client;
+using Serilog;
 
 namespace DigitalLabels.Import.Factories
 {
     public class ManyNationsLabelImportFactory : IImportFactory<ManyNationsLabel>
     {
-        private readonly IDocumentStore documentStore;
+        private readonly IDocumentStore store;
         private Terms terms;
 
-        ManyNationsLabelImportFactory(IDocumentStore documentStore)
+        public ManyNationsLabelImportFactory(IDocumentStore store)
         {
-            this.documentStore = documentStore;
+            this.store = store;
         }
 
         public string ModuleName => "ecatalogue";
@@ -37,7 +38,7 @@ namespace DigitalLabels.Import.Factories
             "AdmTimeModified",
             "materials=[MatPrimaryMaterials_tab,MatTertiaryMaterials_tab]",
             "associations=[AssAssociationType_tab,AssAssociationDate_tab,name=AssAssociationNameRef_tab.(NamOtherNames_tab,NamOrganisation,NamPartyType),AssAssociationLocality_tab,AssAssociationState_tab,AssAssociationRegion_tab,MatTertiaryMaterials_tab]",
-            "narrative=<enarratives:ObjObjectsRef_tab>.(DetPurpose_tab,name=NarAuthorsRef_tab.NamFullName,NarNarrative,media=MulMultiMediaRef_tab.(irn,resource,MulTitle,MulMimeType,MdaDataSets_tab,MdaElement_tab,MdaQualifier_tab,MdaFreeText_tab,ChaRepository_tab,AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified),AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified)",
+            "narrative=<enarratives:ObjObjectsRef_tab>.(DetPurpose_tab,name=NarAuthorsRef_tab.NamFullName,NarNarrative,media=MulMultiMediaRef_tab.(irn,MulTitle,MulMimeType,MdaDataSets_tab,MdaElement_tab,MdaQualifier_tab,MdaFreeText_tab,ChaRepository_tab,AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified),AdmPublishWebNoPassword,AdmDateModified,AdmTimeModified)",
             "collobjs=<eexhibitobjects:StaObjectRef>.(irn,StaGridCode,StaSegmentName,StaCase)"
         };
 
@@ -54,16 +55,16 @@ namespace DigitalLabels.Import.Factories
                 terms.Add("ClaSecondaryClassification", "Many Nations");
                 terms.Add("AdmPublishWebNoPassword", "Yes");
 
-                using (var documentSession = documentStore.OpenSession())
+                using (var session = store.OpenSession())
                 {
-                    var application = documentSession.Load<Application>(Constants.ApplicationId);
+                    var application = session.Load<Application>(Constants.ApplicationId);
                     if (application.LastCompleted.HasValue)
                         terms.Add("AdmDateModified", application.LastCompleted.Value.ToString("MMM dd yyyy"), ">=");
                 }
 
                 return terms;
             }
-        }
+        }    
 
         public ManyNationsLabel Make(Map map)
         {
@@ -166,145 +167,152 @@ namespace DigitalLabels.Import.Factories
                 }
 
                 // Media
-                //var medias = narrative.GetMaps("media");
-                //label.Images = new List<ManyNationsImage>();
-                //foreach (var media in medias)
-                //{
-                //    if (media != null &&
-                //        string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) &&
-                //        media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
-                //    {
-                //        var irn = long.Parse(media.GetString("irn"));
-                //        var type = media.GetString("MulMimeType");
-                //        var fileStream = media.GetMap("resource")["file"] as FileStream;
-                //        var elements = media.GetStrings("MdaElement_tab");
-                //        var qualifiers = media.GetStrings("MdaQualifier_tab");
-                //        var freeTexts = media.GetStrings("MdaFreeText_tab");
-                //        var repositories = media.GetStrings("ChaRepository_tab");
-                //        var dateModified = DateTime.ParseExact($"{media.GetString("AdmDateModified")} {media.GetString("AdmTimeModified")}", "dd/MM/yyyy HH:mm", new CultureInfo("en-AU"));
-                //        var title = media.GetString("MulTitle");
+                var medias = narrative.GetMaps("media");
+                label.Images = new List<ManyNationsImage>();
+                foreach (var media in medias)
+                {
+                    if (media != null &&
+                        string.Equals(media.GetString("AdmPublishWebNoPassword"), "yes", StringComparison.OrdinalIgnoreCase) &&
+                        media.GetStrings("MdaDataSets_tab").Contains("Bunjilaka Digital Label"))
+                    {
+                        var irn = long.Parse(media.GetString("irn"));
+                        var type = media.GetString("MulMimeType");                        
+                        var elements = media.GetStrings("MdaElement_tab");
+                        var qualifiers = media.GetStrings("MdaQualifier_tab");
+                        var freeTexts = media.GetStrings("MdaFreeText_tab");
+                        var repositories = media.GetStrings("ChaRepository_tab");
+                        var dateModified = DateTime.ParseExact($"{media.GetString("AdmDateModified")} {media.GetString("AdmTimeModified")}", "dd/MM/yyyy HH:mm", new CultureInfo("en-AU"));
+                        var title = media.GetString("MulTitle");
 
-                //        var length = Arrays.FindLongestLength(elements, qualifiers, freeTexts);
+                        var length = Arrays.FindLongestLength(elements, qualifiers, freeTexts);
 
-                //        string creator = string.Empty, description = string.Empty, source = string.Empty, copyrightHolder = string.Empty, order = string.Empty, imageType = string.Empty;
+                        string creator = string.Empty, description = string.Empty, source = string.Empty, copyrightHolder = string.Empty, order = string.Empty, imageType = string.Empty;
 
-                //        for (var i = 0; i < length; i++)
-                //        {
-                //            var element = (i < elements.Length) ? elements[i] : null;
-                //            var freeText = (i < freeTexts.Length) ? freeTexts[i] : null;
+                        for (var i = 0; i < length; i++)
+                        {
+                            var element = i < elements.Length ? elements[i] : null;
+                            var freeText = i < freeTexts.Length ? freeTexts[i] : null;
 
-                //            switch (element)
-                //            {
-                //                case "Creator/Photographer":
-                //                    creator = freeText;
-                //                    break;
-                //                case "dcTitle":
-                //                    description = freeText;
-                //                    break;
-                //                case "dcSource":
-                //                    source = freeText;
-                //                    break;
-                //                case "dcRights":
-                //                    copyrightHolder = freeText;
-                //                    break;
-                //                case "Image Order":
-                //                    order = freeText;
-                //                    if (!string.IsNullOrWhiteSpace(freeText))
-                //                        imageType = freeText.Split(' ').FirstOrDefault();
-                //                    break;
-                //            }
-                //        }
+                            switch (element)
+                            {
+                                case "Creator/Photographer":
+                                    creator = freeText;
+                                    break;
+                                case "dcTitle":
+                                    description = freeText;
+                                    break;
+                                case "dcSource":
+                                    source = freeText;
+                                    break;
+                                case "dcRights":
+                                    copyrightHolder = freeText;
+                                    break;
+                                case "Image Order":
+                                    order = freeText;
+                                    if (!string.IsNullOrWhiteSpace(freeText))
+                                        imageType = freeText.Split(' ').FirstOrDefault();
+                                    break;
+                            }
+                        }
 
-                //        // Now we work out what the media is
-                //        if (repositories != null && repositories.Any(x => x == "ICD Online Images Map"))
-                //        {
-                //            label.MapReference = title;
-                //        }
-                //        else if (repositories != null && repositories.Any(x => x == "Indigenous Online Images Square"))
-                //        {
-                //            var url = PathFactory.GetUrlPath(irn, FileFormatType.Jpg);
-                //            var resizeSettings = new ResizeSettings
-                //            {
-                //                Format = FileFormatType.Jpg.ToString(),
-                //                MaxHeight = 105,
-                //                MaxWidth = 105,
-                //                Quality = 90
-                //            };
-
-                //            if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, resizeSettings))
-                //            {
-                //                label.Thumbnail = new MediaAsset
-                //                {
-                //                    Irn = irn,
-                //                    DateModified = dateModified,
-                //                    Url = url
-                //                };
-                //            }
-                //        }
-                //        else if (type == "image")
-                //        {
-                //            var mediumUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "medium");
-                //            var largeUrl = PathFactory.GetUrlPath(irn, FileFormatType.Jpg, "large");
-                //            var mediumResizeSettings = new ResizeSettings
-                //            {
-                //                Format = FileFormatType.Jpg.ToString(),
-                //                Height = 365,
-                //                Width = 649,
-                //                Mode = FitMode.Pad,
-                //                PaddingColor = Color.White,
-                //                Quality = 85
-                //            };
-                //            var largeResizeSettings = new ResizeSettings
-                //            {
-                //                Format = FileFormatType.Jpg.ToString(),
-                //                MaxHeight = 1600,
-                //                MaxWidth = 1600,
-                //                Quality = 85
-                //            };
-
-                //            if (MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, mediumResizeSettings, "medium", true) &&
-                //                MediaHelper.Save(fileStream, irn, FileFormatType.Jpg, largeResizeSettings, "large"))
-                //            {
-                //                label.Images.Add(new ManyNationsImage
-                //                {
-                //                    CopyrightHolder = copyrightHolder,
-                //                    Creator = creator,
-                //                    Description = description,
-                //                    Irn = irn,
-                //                    Order = order,
-                //                    Type = imageType,
-                //                    Source = source,
-                //                    DateModified = dateModified,
-                //                    MediumUrl = mediumUrl,
-                //                    LargeUrl = largeUrl
-                //                });
-                //            }
-                //        }
-                //        else if (type == "video")
-                //        {
-                //            var url = PathFactory.GetUrlPath(irn, FileFormatType.Mp4);
-                //            if (MediaHelper.Save(fileStream, irn, FileFormatType.Mp4, null))
-                //            {
-                //                label.Video = new ManyNationsVideo
-                //                {
-                //                    CopyrightHolder = copyrightHolder,
-                //                    Creator = creator,
-                //                    Description = description,
-                //                    Irn = irn,
-                //                    Order = order,
-                //                    Source = source,
-                //                    DateModified = dateModified,
-                //                    Url = url
-                //                };
-                //            }
-                //        }
-                //    }
-                //}
-
-
+                        // Now we work out what the media is
+                        if (repositories != null && repositories.Any(x => x == "ICD Online Images Map"))
+                        {
+                            label.MapReference = title;
+                        }
+                        else if (repositories != null && repositories.Any(x => x == "Indigenous Online Images Square"))
+                        {
+                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["thumbnail"]))
+                            {
+                                label.Thumbnail = new MediaAsset
+                                {
+                                    Irn = irn,
+                                    DateModified = dateModified,
+                                    Url = PathHelper.GetUrlPath(irn, FileFormatType.Jpg)
+                                };
+                            }
+                        }
+                        else if (type == "image")
+                        {
+                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["medium"], "medium") &&
+                                MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["large"], "large"))
+                            {
+                                label.Images.Add(new ManyNationsImage
+                                {
+                                    CopyrightHolder = copyrightHolder,
+                                    Creator = creator,
+                                    Description = description,
+                                    Irn = irn,
+                                    Order = order,
+                                    Type = imageType,
+                                    Source = source,
+                                    DateModified = dateModified,
+                                    MediumUrl = PathHelper.GetUrlPath(irn, FileFormatType.Jpg, "medium"),
+                                    LargeUrl = PathHelper.GetUrlPath(irn, FileFormatType.Jpg, "large")
+                                });
+                            }
+                        }
+                        else if (type == "video")
+                        {
+                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Mp4))
+                            {
+                                label.Video = new ManyNationsVideo
+                                {
+                                    CopyrightHolder = copyrightHolder,
+                                    Creator = creator,
+                                    Description = description,
+                                    Irn = irn,
+                                    Order = order,
+                                    Source = source,
+                                    DateModified = dateModified,
+                                    Url = PathHelper.GetUrlPath(irn, FileFormatType.Mp4)
+                                };
+                            }
+                        }
+                    }
+                }
             }
+
+            Log.Logger.Debug("Completed {id} creation", label.Id);
 
             return label;
         }
+
+        private readonly Dictionary<string, Func<MagickImage, MagickImage>> ImageTransforms = new Dictionary<string, Func<MagickImage, MagickImage>>
+        {
+            {
+                "thumbnail",
+                image =>
+                {
+                    image.Quality = 90;
+                    image.Format = MagickFormat.Jpeg;
+                    image.Resize(new MagickGeometry(105));
+                    return image;
+                }
+            },
+            {
+                "medium",
+                image =>
+                {
+                    image.Quality = 85;
+                    image.Format = MagickFormat.Jpeg;
+                    image.Resize(new MagickGeometry(649, 365));
+                    image.Extent(new MagickGeometry(649, 365), Gravity.Center, MagickColors.White);
+
+                    return image;
+                }
+            },
+            {
+                "large",
+                image =>
+                {
+                    image.Quality = 85;
+                    image.Format = MagickFormat.Jpeg;
+                    image.Resize(new MagickGeometry(1600));
+
+                    return image;
+                }
+            }
+        };
     }
 }

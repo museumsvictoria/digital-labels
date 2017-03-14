@@ -14,6 +14,7 @@ namespace DigitalLabels.Core.DomainModels
         public Application()
         {
             Id = Constants.ApplicationId;
+            LastCompleted = null;
         }
 
         public void ExecuteTasks()

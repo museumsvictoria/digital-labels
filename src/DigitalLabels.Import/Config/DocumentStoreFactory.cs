@@ -18,33 +18,33 @@ namespace DigitalLabels.Import.Config
             using (Log.Logger.BeginTimedOperation("Create new instance of DocumentStore", "DocumentStoreFactory.Create", LogEventLevel.Debug))
             {
                 // Connect to raven db instance
-                var documentStore = new DocumentStore
+                var store = new DocumentStore
                 {
                     Url = ConfigurationManager.AppSettings["DatabaseUrl"],
                     DefaultDatabase = ConfigurationManager.AppSettings["DatabaseName"]
                 }.Initialize();
 
                 // Ensure DB exists
-                documentStore.DatabaseCommands.GlobalAdmin.EnsureDatabaseExists(ConfigurationManager.AppSettings["DatabaseName"]);
+                store.DatabaseCommands.GlobalAdmin.EnsureDatabaseExists(ConfigurationManager.AppSettings["DatabaseName"]);
 
                 // Create core indexes and store facets
-                IndexCreation.CreateIndexes(typeof(ManyNationsLabel_All).Assembly, documentStore);
+                IndexCreation.CreateIndexes(typeof(ManyNationsLabel_All).Assembly, store);
 
                 // Ensure we have a application document
-                using (var documentSession = documentStore.OpenSession())
+                using (var session = store.OpenSession())
                 {
-                    var application = documentSession.Load<Application>(Constants.ApplicationId);
+                    var application = session.Load<Application>(Constants.ApplicationId);
 
                     if (application == null)
                     {
                         Log.Logger.Information("Creating new application document");
-                        documentSession.Store(new Application());
+                        session.Store(new Application());
                     }
 
-                    documentSession.SaveChanges();
+                    session.SaveChanges();
                 }
 
-                return documentStore;
+                return store;
             }
         }
     }

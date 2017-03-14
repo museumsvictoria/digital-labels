@@ -9,7 +9,7 @@ namespace DigitalLabels.Import.Infrastructure
 {
     public abstract class ImportTask<T> : ITask
     {
-        protected IEnumerable<long> CacheIrns(string moduleName, Terms searchTerms)
+        protected IList<long> CacheIrns(string moduleName, Terms searchTerms)
         {
             var cachedIrns = new List<long>();
             var offset = 0;
@@ -46,7 +46,7 @@ namespace DigitalLabels.Import.Infrastructure
             return cachedIrns;
         }
 
-        protected IEnumerable<T> Fetch(IEnumerable<long> irns, string moduleName, string[] columns, Func<Map, T> makeRecordsFunc)
+        protected IList<T> Fetch(IEnumerable<long> irns, string moduleName, string[] columns, Func<Map, T> makeRecordsFunc)
         {
             // Fetch data
             var records = new List<T>();

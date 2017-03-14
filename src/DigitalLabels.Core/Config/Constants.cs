@@ -4,8 +4,8 @@
     {
         public const string ApplicationId = "applications/digitallabels";
 
-        public const int DataBatchSize = 100;
+        public const int DataBatchSize = 10;
 
-        public const int CachedDataBatchSize = 10000;
+        public const int CachedDataBatchSize = 100;
     }
 }

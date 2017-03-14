@@ -4,6 +4,8 @@ using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Import.Infrastructure;
 using IMu;
+using Raven.Abstractions.Data;
+using Raven.Abstractions.Extensions;
 using Raven.Client;
 using Serilog;
 
@@ -12,13 +14,13 @@ namespace DigitalLabels.Import.Tasks
     public class ManyNationsImportTask : ImportTask<ManyNationsLabel>
     {
         private readonly IImportFactory<ManyNationsLabel> manyNationsLabelImportFactory;
-        private readonly IDocumentStore documentStore;
+        private readonly IDocumentStore store;
 
-        ManyNationsImportTask(
-            IDocumentStore documentStore,
+        public ManyNationsImportTask(
+            IDocumentStore store,
             IImportFactory<ManyNationsLabel> manyNationsLabelImportFactory)
         {
-            this.documentStore = documentStore;
+            this.store = store;
             this.manyNationsLabelImportFactory = manyNationsLabelImportFactory;
         }
 
@@ -28,9 +30,15 @@ namespace DigitalLabels.Import.Tasks
             {
                 var cachedIrns = this.CacheIrns(manyNationsLabelImportFactory.ModuleName, manyNationsLabelImportFactory.Terms);
 
-                var records = this.Fetch(cachedIrns, manyNationsLabelImportFactory.ModuleName, manyNationsLabelImportFactory.Columns, manyNationsLabelImportFactory.Make);
+                var labels = this.Fetch(cachedIrns, manyNationsLabelImportFactory.ModuleName, manyNationsLabelImportFactory.Columns, manyNationsLabelImportFactory.Make);
 
-
+                using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true }))
+                {
+                    foreach (var label in labels)
+                    {
+                        bulkInsert.Store(label);
+                    }
+                }
             }
         }
     }

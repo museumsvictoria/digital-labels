@@ -1,80 +1,76 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Globalization;
-//using System.IO;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using DigitalLabels.Core.DomainModels;
-//using DigitalLabels.Import.Factories;
-//using IMu;
-//using ImageResizer;
-//using NLog;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using DigitalLabels.Core.DomainModels;
+using DigitalLabels.Import.Factories;
+using DigitalLabels.Import.Infrastructure;
+using ImageMagick;
+using IMu;
+using Serilog;
 
-//namespace DigitalLabels.Import.Utilities
-//{
-//    public static class MediaHelper
-//    {
-//        private static readonly Logger _log = LogManager.GetCurrentClassLogger();
+namespace DigitalLabels.Import.Utilities
+{
+    public static class MediaHelper
+    {
+        public static bool TrySaveMedia(long irn, FileFormatType fileFormat, Func<MagickImage, MagickImage> imageTransform = null, string derivative = null)
+        {
+            try
+            {
+                var stopwatch = Stopwatch.StartNew();
 
-//        public static bool Save(FileStream fileStream, long irn, FileFormatType fileFormat, ResizeSettings resizeSettings, string derivative = null, bool reuseStream = false)
-//        {
-//            if (fileStream != null)
-//            {
-//                try
-//                {
-//                    var destPath = PathFactory.GetDestPath(irn, fileFormat, derivative);
-//                    var destPathDir = destPath.Remove(destPath.LastIndexOf('\\') + 1);
+                using (var imuSession = ImuSessionProvider.CreateInstance("emultimedia"))
+                {
+                    imuSession.FindKey(irn);
+                    var resource = imuSession.Fetch("start", 0, -1, new[] { "resource" }).Rows[0].GetMap("resource");
 
-//                    // Create directory
-//                    if (!Directory.Exists(destPathDir))
-//                    {
-//                        Directory.CreateDirectory(destPathDir);
-//                    }
+                    if (resource == null)
+                        throw new IMuException("MultimediaResourceNotFound");
 
-//                    // Delete file if it exists as we want to ensure it is overwritten
-//                    if (File.Exists(destPath))
-//                    {
-//                        File.Delete(destPath);
-//                    }
+                    using (var fileStream = resource["file"] as FileStream)
+                    using (var file = File.Open(PathHelper.MakeDestPath(irn, fileFormat, derivative), FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        // if image transform has been supplied it must be an image, otherwise it is another media type, so simply write file to disk
+                        if (imageTransform != null)
+                        {
+                            using (var image = imageTransform(new MagickImage(fileStream)))
+                            {
+                                image.Write(file);
+                            }
+                        }
+                        else
+                        {
+                            fileStream.CopyTo(file);
+                        }
+                    }
+                }
 
-//                    // Save file
-//                    if (resizeSettings != null)
-//                    {
-//                        ImageBuilder.Current.Build(fileStream, destPath, resizeSettings, !reuseStream);
+                stopwatch.Stop();
+                Log.Logger.Debug("Completed {fileFormat} irn {irn} creation in {ElapsedMilliseconds}ms", fileFormat, irn, stopwatch.ElapsedMilliseconds);
 
-//                        if (reuseStream)
-//                            fileStream.Seek(0, SeekOrigin.Begin);
-//                    }
-//                    else
-//                        fileStream.CopyTo(File.Create(destPath));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex, "Error saving {fileFormat} irn {irn}", fileFormat, irn);
+            }
 
-//                    return true;
-//                }
-//                catch (Exception exception)
-//                {
-//                    // log error
-//                    _log.Error("Error saving image {0}, un-recoverable error, {1}", irn, exception.ToString());
-//                }
-//            }
+            return false;
+        }
 
-//            return false;
-//        }
+        //public static StandingStrongThumbnailType GetStandingStrongThumbnailType(FileStream fileStream)
+        //{
+        //    var imageInfo = new MagickImageInfo(fileStream);            
 
-//        public static StandingStrongThumbnailType GetStandingStrongThumbnailType(FileStream fileStream)
-//        {
-//            var image = ImageBuilder.Current.LoadImage(fileStream, null, true);
+        //    if (imageInfo.Height == 230 && imageInfo.Width == 368)
+        //        return StandingStrongThumbnailType.full;
+        //    if (imageInfo.Height == 350 && imageInfo.Width == 179)
+        //        return StandingStrongThumbnailType.triple;
+        //    if (imageInfo.Height == 230 && imageInfo.Width == 179)
+        //        return StandingStrongThumbnailType.@double;
+        //    if (imageInfo.Height == 110 && imageInfo.Width == 179)
+        //        return StandingStrongThumbnailType.single;
 
-//            if (image.Height == 230 && image.Width == 368)
-//                return StandingStrongThumbnailType.full;
-//            if (image.Height == 350 && image.Width == 179)
-//                return StandingStrongThumbnailType.triple;
-//            if (image.Height == 230 && image.Width == 179)
-//                return StandingStrongThumbnailType.@double;
-//            if (image.Height == 110 && image.Width == 179)
-//                return StandingStrongThumbnailType.single;
-
-//            throw new Exception("Unexpected resolution found for Standing Strong thumbnail");
-//        }
-//    }
-//}
+        //    throw new Exception("Unexpected resolution found for Standing Strong thumbnail");
+        //}
+    }
+}
