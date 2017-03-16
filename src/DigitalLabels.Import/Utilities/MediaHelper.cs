@@ -44,7 +44,11 @@ namespace DigitalLabels.Import.Utilities
                 }
 
                 stopwatch.Stop();
-                Log.Logger.Debug("Completed {fileFormat} {derivative} irn {irn} creation in {ElapsedMilliseconds}ms", fileFormat, derivative ?? string.Empty, irn, stopwatch.ElapsedMilliseconds);
+
+                if(derivative != null)
+                    Log.Logger.Debug("Completed {fileFormat} {derivative} irn {irn} creation in {ElapsedMilliseconds}ms", fileFormat, derivative, irn, stopwatch.ElapsedMilliseconds);
+                else
+                    Log.Logger.Debug("Completed {fileFormat} irn {irn} creation in {ElapsedMilliseconds}ms", fileFormat, irn, stopwatch.ElapsedMilliseconds);
 
                 return true;
             }

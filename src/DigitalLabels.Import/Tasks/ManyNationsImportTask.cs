@@ -23,9 +23,11 @@ namespace DigitalLabels.Import.Tasks
         {
             using (Log.Logger.BeginTimedOperation($"{GetType().Name} starting", $"{GetType().Name}.Execute"))
             {
+                var manyNationsLabels = manyNationsLabelImportFactory.Fetch();
+
                 using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true }))
                 {
-                    foreach (var manyNationsLabel in manyNationsLabelImportFactory.Fetch())
+                    foreach (var manyNationsLabel in manyNationsLabels)
                     {
                         bulkInsert.Store(manyNationsLabel);
                     }

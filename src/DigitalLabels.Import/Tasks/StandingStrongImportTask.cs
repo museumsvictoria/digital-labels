@@ -1,4 +1,5 @@
-﻿using DigitalLabels.Core.DomainModels;
+﻿using System.Linq;
+using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Import.Infrastructure;
 using Raven.Abstractions.Data;
 using Raven.Client;
@@ -22,12 +23,14 @@ namespace DigitalLabels.Import.Tasks
         public void Execute()
         {
             using (Log.Logger.BeginTimedOperation($"{GetType().Name} starting", $"{GetType().Name}.Execute"))
-            {
+            {                
+                var standingStrongLabels = standingStrongLabelImportFactory.Fetch();
+
                 using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true }))
                 {
-                    foreach (var yulendjLabel in standingStrongLabelImportFactory.Fetch())
+                    foreach (var standingStrongLabel in standingStrongLabels)
                     {
-                        bulkInsert.Store(yulendjLabel);
+                        bulkInsert.Store(standingStrongLabel);
                     }
                 }
             }

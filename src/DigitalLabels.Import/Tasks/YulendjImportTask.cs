@@ -23,9 +23,11 @@ namespace DigitalLabels.Import.Tasks
         {
             using (Log.Logger.BeginTimedOperation($"{GetType().Name} starting", $"{GetType().Name}.Execute"))
             {
+                var yulendjLabels = yulendjLabelImportFactory.Fetch();
+
                 using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true }))
                 {
-                    foreach (var yulendjLabel in yulendjLabelImportFactory.Fetch())
+                    foreach (var yulendjLabel in yulendjLabels)
                     {
                         bulkInsert.Store(yulendjLabel);
                     }

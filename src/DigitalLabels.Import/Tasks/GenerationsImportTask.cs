@@ -45,7 +45,7 @@ namespace DigitalLabels.Import.Tasks
                     generationsLabel.SupportingQuotes = generationsQuotes.Where(x => x.PrimaryImageNarrativeIrn == generationsLabel.PrimaryQuote.NarrativeIrn).ToList();
                 }
 
-                using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true }))
+                using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true, BatchSize = 50 }))
                 {
                     foreach (var generationsLabel in generationsLabels)
                     {
