@@ -5,7 +5,6 @@ using System.Linq;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Extensions;
-using DigitalLabels.Import.Infrastructure;
 using DigitalLabels.Import.Utilities;
 using ImageMagick;
 using IMu;
@@ -14,7 +13,7 @@ using Serilog;
 
 namespace DigitalLabels.Import.Factories
 {
-    public class ManyNationsLabelImportFactory : IImportFactory<ManyNationsLabel>
+    public class ManyNationsLabelImportFactory : ImportFactory<ManyNationsLabel>
     {
         private readonly IDocumentStore store;
         private Terms terms;
@@ -24,9 +23,9 @@ namespace DigitalLabels.Import.Factories
             this.store = store;
         }
 
-        public string ModuleName => "ecatalogue";
+        public override string ModuleName => "ecatalogue";
 
-        public string[] Columns => new[]
+        public override string[] Columns => new[]
         {
             "irn",
             "ColRegPrefix",
@@ -42,7 +41,7 @@ namespace DigitalLabels.Import.Factories
             "collobjs=<eexhibitobjects:StaObjectRef>.(irn,StaGridCode,StaSegmentName,StaCase)"
         };
 
-        public Terms Terms
+        public override Terms Terms
         {
             get
             {
@@ -66,20 +65,16 @@ namespace DigitalLabels.Import.Factories
             }
         }    
 
-        public ManyNationsLabel Make(Map map)
+        public override ManyNationsLabel Make(Map map)
         {
-            var label = new ManyNationsLabel();
-
-            // Irn/Id/DateModified
-            label.Id = "manynationslabels/" + map.GetString("irn");
-            label.Irn = long.Parse(map.GetString("irn"));
-            label.DateModified = DateTime.ParseExact($"{map.GetString("AdmDateModified")} {map.GetString("AdmTimeModified")}", "dd/MM/yyyy HH:mm", new CultureInfo("en-AU"));
-
-            // Reg No.
-            label.RegistrationNumber = map["ColRegPart"] != null ? $"{map["ColRegPrefix"]}{map["ColRegNumber"]}.{map["ColRegPart"]}" : $"{map["ColRegPrefix"]}{map["ColRegNumber"]}";
-
-            // Common Name
-            label.CommonName = map.GetString("ClaObjectName");
+            var label = new ManyNationsLabel
+            {
+                Id = "manynationslabels/" + map.GetString("irn"),
+                Irn = long.Parse(map.GetString("irn")),
+                DateModified = DateTime.ParseExact($"{map.GetString("AdmDateModified")} {map.GetString("AdmTimeModified")}", "dd/MM/yyyy HH:mm", new CultureInfo("en-AU")),
+                RegistrationNumber = map["ColRegPart"] != null ? $"{map["ColRegPrefix"]}{map["ColRegNumber"]}.{map["ColRegPart"]}" : $"{map["ColRegPrefix"]}{map["ColRegNumber"]}",
+                CommonName = map.GetString("ClaObjectName")
+            };
 
             // Language Name
             if (!string.IsNullOrWhiteSpace(map.GetString("DesLocalName")))

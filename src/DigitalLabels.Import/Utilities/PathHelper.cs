@@ -10,7 +10,7 @@ namespace DigitalLabels.Import.Utilities
     {
         public static string MakeDestPath(long irn, FileFormatType fileFormat, string derivative = null)
         {
-            var directory = $"{ConfigurationManager.AppSettings["MediaPath"]}\\{GetSubFolder(irn)}\\";
+            var directory = $"{ConfigurationManager.AppSettings["MediaPath"]}\\{GetSubFolder(irn)}";
 
             CreateDirectory(directory);
 

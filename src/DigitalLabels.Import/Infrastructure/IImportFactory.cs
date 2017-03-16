@@ -1,8 +1,9 @@
-﻿using IMu;
+﻿using System.Collections.Generic;
+using IMu;
 
 namespace DigitalLabels.Import.Infrastructure
 {
-    public interface IImportFactory<out T>
+    public interface IImportFactory<T>
     {
         string ModuleName { get; }
 
@@ -11,5 +12,7 @@ namespace DigitalLabels.Import.Infrastructure
         Terms Terms { get; }
 
         T Make(Map map);
+
+        IList<T> Fetch();
     }
 }

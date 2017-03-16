@@ -31,6 +31,8 @@ namespace DigitalLabels.Import.Infrastructure
                 if (!application.TasksRunning)
                 {
                     application.ExecuteTasks();
+                    session.SaveChanges();
+                    session.Dispose();
 
                     try
                     {
@@ -61,6 +63,12 @@ namespace DigitalLabels.Import.Infrastructure
                         Log.Logger.Information("All tasks finished successfully");
                         application.TasksSuccessful(DateTime.Now);
                     }
+
+                    // Force aggressive cache check
+                    store.Conventions.ShouldAggressiveCacheTrackChanges = true;
+
+                    session.SaveChanges();
+                    session.Dispose();
                 }
                 else
                 {

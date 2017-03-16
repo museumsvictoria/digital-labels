@@ -1,5 +1,6 @@
 ﻿using System;
 using Serilog;
+using ImageMagick;
 
 namespace DigitalLabels.Import.Config
 {
@@ -18,6 +19,9 @@ namespace DigitalLabels.Import.Config
 
             // Log any exceptions that are not handled
             AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => Log.Logger.Fatal((Exception)eventArgs.ExceptionObject, "Unhandled Exception occured in export");
+
+            // Stop imagemagick from throwing memory access violation exceptions
+            OpenCL.IsEnabled = false;
         }
     }
 }

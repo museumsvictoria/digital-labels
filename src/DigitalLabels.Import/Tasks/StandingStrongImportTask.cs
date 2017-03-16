@@ -6,17 +6,17 @@ using Serilog;
 
 namespace DigitalLabels.Import.Tasks
 {
-    public class ManyNationsImportTask : ITask
+    public class StandingStrongTask : ITask
     {
-        private readonly IImportFactory<ManyNationsLabel> manyNationsLabelImportFactory;
+        private readonly IImportFactory<StandingStrongLabel> standingStrongLabelImportFactory;
         private readonly IDocumentStore store;
 
-        public ManyNationsImportTask(
+        public StandingStrongTask(
             IDocumentStore store,
-            IImportFactory<ManyNationsLabel> manyNationsLabelImportFactory)
+            IImportFactory<StandingStrongLabel> standingStrongLabelImportFactory)
         {
             this.store = store;
-            this.manyNationsLabelImportFactory = manyNationsLabelImportFactory;
+            this.standingStrongLabelImportFactory = standingStrongLabelImportFactory;
         }
 
         public void Execute()
@@ -25,9 +25,9 @@ namespace DigitalLabels.Import.Tasks
             {
                 using (var bulkInsert = store.BulkInsert(options: new BulkInsertOptions { OverwriteExisting = true }))
                 {
-                    foreach (var manyNationsLabel in manyNationsLabelImportFactory.Fetch())
+                    foreach (var yulendjLabel in standingStrongLabelImportFactory.Fetch())
                     {
-                        bulkInsert.Store(manyNationsLabel);
+                        bulkInsert.Store(yulendjLabel);
                     }
                 }
             }

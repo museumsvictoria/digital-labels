@@ -23,7 +23,7 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -32,16 +32,17 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -52,8 +53,8 @@
     <Reference Include="imu-1.0.03">
       <HintPath>..\..\lib\IMu\imu-1.0.03.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q8-AnyCPU, Version=7.0.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\packages\Magick.NET-Q8-AnyCPU.7.0.4.701\lib\net40-client\Magick.NET-Q8-AnyCPU.dll</HintPath>
+    <Reference Include="Magick.NET-Q16-x64, Version=7.0.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
+      <HintPath>..\packages\Magick.NET-Q16-x64.7.0.4.701\lib\net40-client\Magick.NET-Q16-x64.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions, Version=3.5.1.0, Culture=neutral, PublicKeyToken=37f41c7f99471593, processorArchitecture=MSIL">
       <HintPath>..\packages\RavenDB.Client.3.5.1\lib\net45\Raven.Abstractions.dll</HintPath>
@@ -91,6 +92,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -100,18 +102,17 @@
     <Compile Include="Config\SerilogConfig.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\MapExtensions.cs" />
+    <Compile Include="Factories\GenerationsQuoteImportFactory.cs" />
+    <Compile Include="Factories\GenerationsLabelImportFactory.cs" />
+    <Compile Include="Factories\ImportFactory.cs" />
+    <Compile Include="Factories\StandingStrongLabelImportFactory.cs" />
+    <Compile Include="Factories\YulendjLabelImportFactory.cs" />
     <Compile Include="Factories\ManyNationsLabelImportFactory.cs" />
-    <Compile Include="Factories\old\StandingStrongImuFactory.cs" />
-    <Compile Include="Factories\old\StandingStrongLabelFactory.cs" />
-    <Compile Include="Factories\old\YulendjImuFactory.cs" />
-    <Compile Include="Factories\old\YulendjLabelFactory.cs" />
-    <Compile Include="Factories\old\GenerationsLabelFactory.cs" />
-    <Compile Include="Factories\old\GenerationsImuFactory.cs" />
-    <Compile Include="Factories\old\ManyNationsImuFactory.cs" />
-    <Compile Include="Factories\old\ManyNationsLabelFactory.cs" />
+    <Compile Include="Tasks\GenerationsImportTask.cs" />
+    <Compile Include="Tasks\StandingStrongImportTask.cs" />
+    <Compile Include="Tasks\YulendjImportTask.cs" />
     <Compile Include="Utilities\PathHelper.cs" />
     <Compile Include="Infrastructure\IImportFactory.cs" />
-    <Compile Include="Infrastructure\ImportTask.cs" />
     <Compile Include="Infrastructure\ITask.cs" />
     <Compile Include="Infrastructure\TaskRunner.cs" />
     <Compile Include="Infrastructure\ImuSessionProvider.cs" />
@@ -144,6 +145,13 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\Magick.NET-Q16-x64.7.0.4.701\build\net40-client\Magick.NET-Q16-x64.targets" Condition="Exists('..\packages\Magick.NET-Q16-x64.7.0.4.701\build\net40-client\Magick.NET-Q16-x64.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Magick.NET-Q16-x64.7.0.4.701\build\net40-client\Magick.NET-Q16-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Magick.NET-Q16-x64.7.0.4.701\build\net40-client\Magick.NET-Q16-x64.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
