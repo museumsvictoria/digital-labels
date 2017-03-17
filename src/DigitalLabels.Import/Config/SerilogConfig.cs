@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 using Serilog;
 
 namespace DigitalLabels.Import.Config
@@ -13,6 +10,9 @@ namespace DigitalLabels.Import.Config
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
+                .Enrich.WithProperty("Environment", ConfigurationManager.AppSettings["SeqEnvironment"])
+                .Enrich.WithProperty("Application", "Digital Labels Import")
+                .WriteTo.Seq(ConfigurationManager.AppSettings["SeqUrl"])
                 .WriteTo.ColoredConsole()
                 .WriteTo.RollingFile($"{AppDomain.CurrentDomain.BaseDirectory}\\logs\\{{Date}}.txt")
                 .CreateLogger();
