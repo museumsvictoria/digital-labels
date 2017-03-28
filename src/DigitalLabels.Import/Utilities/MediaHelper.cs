@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using DigitalLabels.Core.DomainModels;
@@ -11,7 +12,12 @@ namespace DigitalLabels.Import.Utilities
 {
     public static class MediaHelper
     {
-        public static bool TrySaveMedia(long irn, FileFormatType fileFormat, Func<MagickImage, MagickImage> imageTransform = null, string derivative = null)
+        public static bool TrySaveMedia(long irn, MediaJob mediaJob)
+        {
+            return TrySaveMedia(irn, new[] { mediaJob });
+        }
+
+        public static bool TrySaveMedia(long irn, IEnumerable<MediaJob> mediaJobs)
         {
             try
             {
@@ -26,40 +32,46 @@ namespace DigitalLabels.Import.Utilities
                         throw new IMuException("MultimediaResourceNotFound");
 
                     using (var fileStream = resource["file"] as FileStream)
-                    using (var file = File.Open(PathHelper.MakeDestPath(irn, fileFormat, derivative), FileMode.Create, FileAccess.ReadWrite))
                     {
-                        // if image transform has been supplied apply transform if not simply write file to disk
-                        if (imageTransform != null)
+                        foreach (var mediaJob in mediaJobs)
                         {
-                            using (var image = imageTransform(new MagickImage(fileStream)))
+                            using (var file = File.Open(PathHelper.MakeDestPath(irn, mediaJob.FileFormat, mediaJob.Derivative), FileMode.Create, FileAccess.ReadWrite))
                             {
-                                image.Write(file);
+                                // if image transform has been supplied apply transform if not simply write file to disk
+                                if (mediaJob.ImageTransform != null)
+                                {
+                                    using (var image = mediaJob.ImageTransform(new MagickImage(fileStream)))
+                                    {
+                                        image.Write(file);
+                                    }
+                                }
+                                else
+                                {
+                                    fileStream.CopyTo(file);
+                                }
+
+                                Log.Logger.Debug("Written file {fileName}", PathHelper.GetFileName(irn, mediaJob.FileFormat, mediaJob.Derivative));
+
+                                fileStream.Position = 0;
                             }
-                        }
-                        else
-                        {
-                            fileStream.CopyTo(file);
                         }
                     }
                 }
 
                 stopwatch.Stop();
 
-                if(derivative != null)
-                    Log.Logger.Debug("Completed {fileFormat} {derivative} irn {irn} creation in {ElapsedMilliseconds}ms", fileFormat, derivative, irn, stopwatch.ElapsedMilliseconds);
-                else
-                    Log.Logger.Debug("Completed {fileFormat} irn {irn} creation in {ElapsedMilliseconds}ms", fileFormat, irn, stopwatch.ElapsedMilliseconds);
+                Log.Logger.Debug("Completed media with irn {irn} creation in {ElapsedMilliseconds}ms", irn, stopwatch.ElapsedMilliseconds);
 
                 return true;
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex, "Error saving {fileFormat} irn {irn}", fileFormat, irn);
+                Log.Logger.Error(ex, "Error saving media with irn {irn}", irn);
             }
 
             return false;
         }
-
+        
         public static bool TrySaveStandingStrongThumbnail(long irn, FileFormatType fileFormat, out StandingStrongThumbnailType? thumbnailType)
         {
             try

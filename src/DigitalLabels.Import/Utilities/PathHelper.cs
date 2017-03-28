@@ -10,11 +10,11 @@ namespace DigitalLabels.Import.Utilities
     {
         public static string MakeDestPath(long irn, FileFormatType fileFormat, string derivative = null)
         {
-            var directory = $"{ConfigurationManager.AppSettings["MediaPath"]}\\{GetSubFolder(irn)}";
+            var directory = $"{ConfigurationManager.AppSettings["MediaPath"]}\\{GetSubFolder(irn)}\\";
 
             CreateDirectory(directory);
 
-            return $"{directory}\\{GetFileName(irn, fileFormat, derivative)}";
+            return $"{directory}{GetFileName(irn, fileFormat, derivative)}";
         }
 
         public static string GetUrlPath(long irn, FileFormatType fileFormat, string derivative = null)
@@ -22,14 +22,14 @@ namespace DigitalLabels.Import.Utilities
             return $"{ConfigurationManager.AppSettings["MediaServerUrl"]}media/{GetSubFolder(irn)}/{GetFileName(irn, fileFormat, derivative)}";
         }
 
+        public static string GetFileName(long irn, FileFormatType fileFormat, string derivative)
+        {
+            return derivative == null ? $"{irn}.{fileFormat.ToString().ToLower()}" : $"{irn}-{derivative}.{fileFormat.ToString().ToLower()}";
+        }
+
         private static int GetSubFolder(long id)
         {
             return (int)(id % 10);
-        }
-
-        private static string GetFileName(long irn, FileFormatType fileFormat, string derivative)
-        {
-            return derivative == null ? $"{irn}.{fileFormat.ToString().ToLower()}" : $"{irn}-{derivative}.{fileFormat.ToString().ToLower()}";
         }
 
         private static void CreateDirectory(string path)

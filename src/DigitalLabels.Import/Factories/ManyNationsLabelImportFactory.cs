@@ -5,6 +5,7 @@ using System.Linq;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Extensions;
+using DigitalLabels.Import.Infrastructure;
 using DigitalLabels.Import.Utilities;
 using ImageMagick;
 using IMu;
@@ -217,7 +218,7 @@ namespace DigitalLabels.Import.Factories
                         }
                         else if (repositories != null && repositories.Any(x => x == "Indigenous Online Images Square"))
                         {
-                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["thumbnail"]))
+                            if (MediaHelper.TrySaveMedia(irn, thumbnailMediaJob))
                             {
                                 label.Thumbnail = new MediaAsset
                                 {
@@ -229,8 +230,7 @@ namespace DigitalLabels.Import.Factories
                         }
                         else if (type == "image")
                         {
-                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["medium"], "medium") &&
-                                MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["large"], "large"))
+                            if (MediaHelper.TrySaveMedia(irn, imageMediaJobs))
                             {
                                 label.Images.Add(new ManyNationsImage
                                 {
@@ -249,7 +249,7 @@ namespace DigitalLabels.Import.Factories
                         }
                         else if (type == "video")
                         {
-                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Mp4))
+                            if (MediaHelper.TrySaveMedia(irn, videoMediaJob))
                             {
                                 label.Video = new ManyNationsVideo
                                 {
@@ -273,21 +273,25 @@ namespace DigitalLabels.Import.Factories
             return label;
         }
 
-        private readonly Dictionary<string, Func<MagickImage, MagickImage>> ImageTransforms = new Dictionary<string, Func<MagickImage, MagickImage>>
+        private readonly MediaJob thumbnailMediaJob = new MediaJob
         {
+            FileFormat = FileFormatType.Jpg,
+            ImageTransform = image =>
             {
-                "thumbnail",
-                image =>
-                {
-                    image.Quality = 90;
-                    image.Format = MagickFormat.Jpeg;
-                    image.Resize(new MagickGeometry(105));
-                    return image;
-                }
-            },
+                image.Quality = 90;
+                image.Format = MagickFormat.Jpeg;
+                image.Resize(new MagickGeometry(105));
+                return image;
+            }
+        };
+
+        private readonly IEnumerable<MediaJob> imageMediaJobs = new[]
+        {
+            new MediaJob
             {
-                "medium",
-                image =>
+                FileFormat = FileFormatType.Jpg,
+                Derivative = "medium",
+                ImageTransform = image =>
                 {
                     image.Quality = 85;
                     image.Format = MagickFormat.Jpeg;
@@ -297,9 +301,11 @@ namespace DigitalLabels.Import.Factories
                     return image;
                 }
             },
+            new MediaJob
             {
-                "large",
-                image =>
+                FileFormat = FileFormatType.Jpg,
+                Derivative = "large",
+                ImageTransform = image =>
                 {
                     image.Quality = 85;
                     image.Format = MagickFormat.Jpeg;
@@ -308,6 +314,11 @@ namespace DigitalLabels.Import.Factories
                     return image;
                 }
             }
+        };
+
+        private readonly MediaJob videoMediaJob = new MediaJob
+        {
+            FileFormat = FileFormatType.Mp4
         };
     }
 }

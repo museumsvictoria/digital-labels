@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
+using DigitalLabels.Import.Infrastructure;
 using DigitalLabels.Import.Utilities;
 using ImageMagick;
 using IMu;
@@ -111,7 +112,6 @@ namespace DigitalLabels.Import.Factories
                         }
                     }
 
-                    var url = PathHelper.GetUrlPath(irn, FileFormatType.Jpg);
                     var image = new YulendjImage
                     {
                         DateModified = dateModified,
@@ -119,20 +119,19 @@ namespace DigitalLabels.Import.Factories
                         Irn = irn,
                         Photographer = photographer,
                         Source = source,
-                        Url = url
+                        Url = PathHelper.GetUrlPath(irn, FileFormatType.Jpg)
                     };
 
                     // Now we work out what the media is
-                    switch (imageType)
+                    if (imageType == "portrait")
                     {
-                        case "portrait":
-                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["profileImage"]))
-                                label.ProfileImage = image;
-                            break;
-                        case "texture":
-                            if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["texturePanelImage"]))
-                                label.TexturePanelImage = image;
-                            break;
+                        if (MediaHelper.TrySaveMedia(irn, profileImageMediaJob))
+                            label.ProfileImage = image;
+                    }
+                    else if (imageType == "texture")
+                    {
+                        if (MediaHelper.TrySaveMedia(irn, texturePanelImageMediaJob))
+                            label.TexturePanelImage = image;
                     }
                 }
             }
@@ -142,29 +141,29 @@ namespace DigitalLabels.Import.Factories
             return label;
         }
 
-        private readonly Dictionary<string, Func<MagickImage, MagickImage>> ImageTransforms = new Dictionary<string, Func<MagickImage, MagickImage>>
+        private readonly MediaJob profileImageMediaJob = new MediaJob
         {
+            FileFormat = FileFormatType.Jpg,
+            ImageTransform = image =>
             {
-                "profileImage",
-                image =>
-                {
-                    image.Quality = 90;
-                    image.Format = MagickFormat.Jpeg;
-                    image.Resize(new MagickGeometry(500, 750));
+                image.Quality = 90;
+                image.Format = MagickFormat.Jpeg;
+                image.Resize(new MagickGeometry(500, 750));
 
-                    return image;
-                }
-            },
+                return image;
+            }
+        };
+
+        private readonly MediaJob texturePanelImageMediaJob = new MediaJob
+        {
+            FileFormat = FileFormatType.Jpg,
+            ImageTransform = image =>
             {
-                "texturePanelImage",
-                image =>
-                {
-                    image.Quality = 85;
-                    image.Format = MagickFormat.Jpeg;
-                    image.Resize(new MagickGeometry(750));
+                image.Quality = 85;
+                image.Format = MagickFormat.Jpeg;
+                image.Resize(new MagickGeometry(750));
 
-                    return image;
-                }
+                return image;
             }
         };
     }

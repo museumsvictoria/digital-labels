@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
+using DigitalLabels.Import.Infrastructure;
 using DigitalLabels.Import.Utilities;
 using ImageMagick;
 using IMu;
@@ -130,8 +131,7 @@ namespace DigitalLabels.Import.Factories
                     // Now we work out what the media is
                     if (repositorys != null && repositorys.All(x => x != "Indigenous Online Images Square") && type == "image")
                     {
-                        if (MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["medium"], "medium") &&
-                            MediaHelper.TrySaveMedia(irn, FileFormatType.Jpg, ImageTransforms["large"], "large"))
+                        if (MediaHelper.TrySaveMedia(irn, imageMediaJobs))
                         {
                             label.Image = new GenerationsImage
                             {
@@ -204,11 +204,13 @@ namespace DigitalLabels.Import.Factories
             return label;
         }
 
-        private readonly Dictionary<string, Func<MagickImage, MagickImage>> ImageTransforms = new Dictionary<string, Func<MagickImage, MagickImage>>
+        private readonly IEnumerable<MediaJob> imageMediaJobs = new[]
         {
+            new MediaJob
             {
-                "medium",
-                image =>
+                FileFormat = FileFormatType.Jpg,
+                Derivative = "medium",
+                ImageTransform = image =>
                 {
                     image.Quality = 85;
                     image.Format = MagickFormat.Jpeg;
@@ -217,9 +219,11 @@ namespace DigitalLabels.Import.Factories
                     return image;
                 }
             },
+            new MediaJob
             {
-                "large",
-                image =>
+                FileFormat = FileFormatType.Jpg,
+                Derivative = "large",
+                ImageTransform = image =>
                 {
                     image.Quality = 85;
                     image.Format = MagickFormat.Jpeg;
