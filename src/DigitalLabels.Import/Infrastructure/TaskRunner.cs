@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using Raven.Client;
@@ -34,6 +35,15 @@ namespace DigitalLabels.Import.Infrastructure
                     session.SaveChanges();
                     session.Dispose();
 
+                    NetworkShareAccesser networkShareAccesser = null;
+                    if (!string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["WebSiteDomain"]))
+                    {
+                        networkShareAccesser =
+                            NetworkShareAccesser.Access(ConfigurationManager.AppSettings["WebSiteComputer"],
+                                ConfigurationManager.AppSettings["WebSiteDomain"],
+                                ConfigurationManager.AppSettings["WebSiteUser"],
+                                ConfigurationManager.AppSettings["WebSitePassword"]);
+                    }
                     try
                     {
                         foreach (var importTask in tasks)
@@ -48,6 +58,10 @@ namespace DigitalLabels.Import.Infrastructure
                     {
                         tasksFailed = true;
                         Log.Logger.Error(ex, "Exception occured running export");
+                    }
+                    finally
+                    {
+                        networkShareAccesser?.Dispose();
                     }
 
                     session = store.OpenSession();
