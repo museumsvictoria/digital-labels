@@ -35,11 +35,11 @@ namespace DigitalLabels.Import.Infrastructure
                     session.SaveChanges();
                     session.Dispose();
 
-                    NetworkShareAccesser networkShareAccesser = null;
+                    NetworkShareAccessor networkShareAccessor = null;
                     if (!string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["WebSiteDomain"]))
                     {
-                        networkShareAccesser =
-                            NetworkShareAccesser.Access(ConfigurationManager.AppSettings["WebSiteComputer"],
+                        networkShareAccessor =
+                            NetworkShareAccessor.Access(ConfigurationManager.AppSettings["WebSiteComputer"],
                                 ConfigurationManager.AppSettings["WebSiteDomain"],
                                 ConfigurationManager.AppSettings["WebSiteUser"],
                                 ConfigurationManager.AppSettings["WebSitePassword"]);
@@ -61,7 +61,7 @@ namespace DigitalLabels.Import.Infrastructure
                     }
                     finally
                     {
-                        networkShareAccesser?.Dispose();
+                        networkShareAccessor?.Dispose();
                     }
 
                     session = store.OpenSession();
