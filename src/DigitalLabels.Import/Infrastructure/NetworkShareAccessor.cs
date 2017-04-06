@@ -7,7 +7,7 @@ namespace DigitalLabels.Import.Infrastructure
     /// <summary>
     /// Provides access to a network share.
     /// </summary>
-    public class NetworkShareAccesser : IDisposable
+    public class NetworkShareAccessor : IDisposable
     {
         private string _remoteUncName;
         private string _remoteComputerName;
@@ -132,50 +132,50 @@ namespace DigitalLabels.Import.Infrastructure
         #endregion
 
         /// <summary>
-        /// Creates a NetworkShareAccesser for the given computer name. The user will be promted to enter credentials
+        /// Creates a NetworkShareAccessor for the given computer name. The user will be promted to enter credentials
         /// </summary>
         /// <param name="remoteComputerName"></param>
         /// <returns></returns>
-        public static NetworkShareAccesser Access(string remoteComputerName)
+        public static NetworkShareAccessor Access(string remoteComputerName)
         {
-            return new NetworkShareAccesser(remoteComputerName);
+            return new NetworkShareAccessor(remoteComputerName);
         }
 
         /// <summary>
-        /// Creates a NetworkShareAccesser for the given computer name using the given domain/computer name, username and password
+        /// Creates a NetworkShareAccessor for the given computer name using the given domain/computer name, username and password
         /// </summary>
         /// <param name="remoteComputerName"></param>
         /// <param name="domainOrComuterName"></param>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        public static NetworkShareAccesser Access(string remoteComputerName, string domainOrComuterName, string userName, string password)
+        public static NetworkShareAccessor Access(string remoteComputerName, string domainOrComuterName, string userName, string password)
         {
-            return new NetworkShareAccesser(remoteComputerName,
+            return new NetworkShareAccessor(remoteComputerName,
                                             domainOrComuterName + @"\" + userName,
                                             password);
         }
 
         /// <summary>
-        /// Creates a NetworkShareAccesser for the given computer name using the given username (format: domainOrComputername\Username) and password
+        /// Creates a NetworkShareAccessor for the given computer name using the given username (format: domainOrComputername\Username) and password
         /// </summary>
         /// <param name="remoteComputerName"></param>
         /// <param name="userName"></param>
         /// <param name="password"></param>
-        public static NetworkShareAccesser Access(string remoteComputerName, string userName, string password)
+        public static NetworkShareAccessor Access(string remoteComputerName, string userName, string password)
         {
-            return new NetworkShareAccesser(remoteComputerName,
+            return new NetworkShareAccessor(remoteComputerName,
                                             userName,
                                             password);
         }
 
-        private NetworkShareAccesser(string remoteComputerName)
+        private NetworkShareAccessor(string remoteComputerName)
         {
             RemoteComputerName = remoteComputerName;
 
             this.ConnectToShare(this._remoteUncName, null, null, true);
         }
 
-        private NetworkShareAccesser(string remoteComputerName, string userName, string password)
+        private NetworkShareAccessor(string remoteComputerName, string userName, string password)
         {
             RemoteComputerName = remoteComputerName;
             UserName = userName;

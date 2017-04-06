@@ -119,6 +119,7 @@
     <Compile Include="Factories\YulendjLabelImportFactory.cs" />
     <Compile Include="Factories\ManyNationsLabelImportFactory.cs" />
     <Compile Include="Infrastructure\MediaJob.cs" />
+    <Compile Include="Infrastructure\NetworkShareAccessor.cs" />
     <Compile Include="Tasks\GenerationsImportTask.cs" />
     <Compile Include="Tasks\StandingStrongImportTask.cs" />
     <Compile Include="Tasks\YulendjImportTask.cs" />
