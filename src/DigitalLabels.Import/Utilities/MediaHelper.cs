@@ -97,13 +97,13 @@ namespace DigitalLabels.Import.Utilities
                         fileStream.Position = 0;
                         var imageInfo = new MagickImageInfo(fileStream);
 
-                        if (imageInfo.Height == 230 && imageInfo.Width == 368)
+                        if (imageInfo.Height == 324 && imageInfo.Width == 516)
                             thumbnailType = StandingStrongThumbnailType.full;
-                        else if (imageInfo.Height == 350 && imageInfo.Width == 179)
+                        else if (imageInfo.Height == 494 && imageInfo.Width == 250)
                             thumbnailType = StandingStrongThumbnailType.triple;
-                        else if(imageInfo.Height == 230 && imageInfo.Width == 179)
+                        else if(imageInfo.Height == 324 && imageInfo.Width == 250)
                             thumbnailType = StandingStrongThumbnailType.@double;
-                        else if(imageInfo.Height == 110 && imageInfo.Width == 179)
+                        else if(imageInfo.Height == 154 && imageInfo.Width == 250)
                             thumbnailType = StandingStrongThumbnailType.single;
                         else
                             throw new Exception("Unexpected resolution found for Standing Strong thumbnail");
