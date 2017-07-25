@@ -13,5 +13,11 @@ namespace DigitalLabels.WebApi.Controllers
         {
             return View();
         }
+
+        [GET("standingstronghd")]
+        public ActionResult StandingStrongHd()
+        {
+            return View();
+        }
     }
 }

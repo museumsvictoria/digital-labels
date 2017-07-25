@@ -1,0 +1,198 @@
+/* global styles */
+* {
+  -webkit-user-drag: none;
+  -webkit-user-select: none; 
+}
+body {
+margin: 0;
+padding: 0;
+width: 1080px;
+font-family: Univers;
+color: #fff;
+background: #000;
+overflow-x: hidden;
+}
+@font-face {
+  font-family: Univers;
+  src: url("../../assets/standingstrong/UniversCom-45Light.ttf");
+}
+@font-face {
+  font-family: IdealSans;
+  src: url("../../assets/standingstrong/IdealSans-Book-Pro.otf");
+}
+#progress {
+  font-size: 35px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  text-shadow:0px 0px 4px #000;
+}
+
+/* photo grid styles */
+.grid-wrapper {
+  height: 1920px;
+  width: 1080px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.grid-wrapper::-webkit-scrollbar-track
+{   
+  margin: 16px 0 16px;
+}
+.grid-wrapper::-webkit-scrollbar
+{
+  width: 13px;
+}
+.grid-wrapper::-webkit-scrollbar-thumb
+{
+  border-radius: 14px;
+  background: #c7940d;
+}
+#grid {
+  background: #000;
+  margin: 16px 0 16px 16px;
+}
+#grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+.logo {
+  float: left;
+}
+.logo img {
+  display: block;  
+}
+.label {
+  float: left;  
+}
+.label img {
+  display: block;
+}
+.label.single, .label.single img {
+  width: 250px;
+  height: 154px;
+}
+.label.double, .label.double img {
+  width: 250px;
+  height: 324px;
+}
+.label.triple, .label.triple img {
+  width: 250px;
+  height: 494px;
+}
+.label.full, .label.full img {
+  width: 516px;
+  height: 324px;
+}
+
+/* image detail styles */
+#details {
+  display: none;
+  z-index: 200;
+  width: 1080px;
+  height: 1920px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000 top left no-repeat url('../../assets/standingstrong/bg_details_hd.jpg');
+}
+.details-container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content:space-between;
+  height: 100%;
+}
+
+/* header styles */
+.header {
+  background: #c7940d;
+  order: 1;
+  flex: 0 0 200px;
+  width: 100%;
+  max-height:255px;
+  display: flex;
+  align-items: center;
+}
+
+.header .title {
+  color: #573905;
+  font-family: IdealSans;
+  font-size: 35px;
+  width: 840px;
+  margin: 0 auto;
+}
+.close {
+  position: absolute;
+  right: 28px;
+  top: 28px;
+  height: 70px;
+  width: 70px;
+  background: #3b3b3b url('../../assets/standingstrong/bg_close_hd.png') no-repeat center center;
+}
+
+/* image styles */
+.image {  
+  order: 2;
+  flex:0 1 auto;
+}
+.image img {
+  max-width: 1019px;
+  max-height: 937px;
+  margin: 37px auto 13px;
+  display:block;
+}
+.credits {
+  color: #fff;
+  font-size: 18px;
+}
+
+/* text styles */
+.text-wrapper {
+  order: 3;
+  overflow-y:scroll;
+  margin: 40px 70px 0 0;
+  padding:0 48px 0 118px;
+  flex:1 1 420px;
+}
+.text-wrapper::-webkit-scrollbar-track
+{   
+  margin:0 0 28px;
+}
+.text-wrapper::-webkit-scrollbar
+{
+  width: 13px;
+}
+.text-wrapper::-webkit-scrollbar-thumb
+{
+  border-radius: 14px;
+  background: #c7940d;
+}
+.text {
+  padding: 0 0 28px;
+}
+.quote {
+  margin: 0 0 28px;  
+  font-family: IdealSans;
+  font-size: 38px;
+  color: #6f625a;
+  position: relative;
+}
+.quote:after {
+  content: '‘';
+  display: block;
+  position: absolute;
+  top:-39px;
+  left: -56px;
+  font-size: 182px;
+}
+.quote-source {
+  font-size: 26px;
+  margin: 0 0 52px;
+  color: #6f625a;
+}
+.story {
+  color: #fff;
+  font-size: 23px;
+}
