@@ -1,5 +1,6 @@
 ﻿using DigitalLabels.Import.Config;
 using DigitalLabels.Import.Infrastructure;
+using Serilog;
 
 namespace DigitalLabels.Import
 {

@@ -22,6 +22,15 @@ namespace DigitalLabels.Import.Config
 
             // Stop imagemagick from throwing memory access violation exceptions
             OpenCL.IsEnabled = false;
+
+            // Bind process exit
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomainOnProcessExit;
+        }
+
+        private static void CurrentDomainOnProcessExit(object sender, EventArgs e)
+        {
+            // Ensure log events are written
+            Log.CloseAndFlush();
         }
     }
 }

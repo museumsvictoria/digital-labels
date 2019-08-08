@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Import.Infrastructure;
 using ImageMagick;
@@ -19,10 +22,19 @@ namespace DigitalLabels.Import.Utilities
 
         public static bool TrySaveMedia(long irn, IEnumerable<MediaJob> mediaJobs)
         {
+            var stopwatch = Stopwatch.StartNew();
+
+            // first see if we are checking for existing media
+            if (bool.Parse(ConfigurationManager.AppSettings["CheckExistingMedia"]) && FileExists(irn, mediaJobs))
+            {
+                stopwatch.Stop();
+                Log.Logger.Debug("Found existing image {Irn} in {ElapsedMilliseconds} ms", irn, stopwatch.ElapsedMilliseconds);
+
+                return true;
+            }
+
             try
             {
-                var stopwatch = Stopwatch.StartNew();
-
                 using (var imuSession = ImuSessionProvider.CreateInstance("emultimedia"))
                 {
                     imuSession.FindKey(irn);
@@ -74,10 +86,20 @@ namespace DigitalLabels.Import.Utilities
         
         public static bool TrySaveStandingStrongThumbnail(long irn, FileFormatType fileFormat, out StandingStrongThumbnailType? thumbnailType)
         {
+            var stopwatch = Stopwatch.StartNew();
+
+            // first see if we are checking for existing media
+            if (bool.Parse(ConfigurationManager.AppSettings["CheckExistingMedia"]) && FileExists(irn, fileFormat))
+            {
+                stopwatch.Stop();
+                Log.Logger.Debug("Found existing image {Irn} in {ElapsedMilliseconds} ms", irn, stopwatch.ElapsedMilliseconds);
+
+                thumbnailType = null;
+                return true;
+            }
+
             try
             {
-                var stopwatch = Stopwatch.StartNew();
-
                 using (var imuSession = ImuSessionProvider.CreateInstance("emultimedia"))
                 {
                     imuSession.FindKey(irn);
@@ -122,6 +144,18 @@ namespace DigitalLabels.Import.Utilities
 
             thumbnailType = null;
             return false;
+        }
+
+        private static bool FileExists(long irn, IEnumerable<MediaJob> mediaJobs)
+        {
+            // check whether media exists on disk for all media jobs
+            return mediaJobs.All(mediaJob => File.Exists(PathHelper.MakeDestPath(irn, mediaJob.FileFormat, mediaJob.Derivative)));
+        }
+
+        private static bool FileExists(long irn, FileFormatType fileFormat)
+        {
+            // check whether media exists on disk for all media jobs
+            return File.Exists(PathHelper.MakeDestPath(irn, fileFormat));
         }
     }
 }
