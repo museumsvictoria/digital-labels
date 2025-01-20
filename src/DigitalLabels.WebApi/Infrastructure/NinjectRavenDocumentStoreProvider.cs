@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Net;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Indexes;
@@ -16,7 +17,10 @@ namespace DigitalLabels.WebApi.Infrastructure
         {
             var documentStore = new DocumentStore
             {
-                Url = ConfigurationManager.AppSettings["DatabaseUrl"]
+                Url = ConfigurationManager.AppSettings["DatabaseUrl"],
+                Credentials = new NetworkCredential(ConfigurationManager.AppSettings["DatabaseUserName"],
+                ConfigurationManager.AppSettings["DatabasePassword"],
+                ConfigurationManager.AppSettings["DatabaseDomain"])
             };
 
             var hasDefaultDatabase = !string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["DatabaseName"]);

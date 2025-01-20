@@ -1,5 +1,5 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
+using System.Net;
 using DigitalLabels.Core.Config;
 using DigitalLabels.Core.DomainModels;
 using DigitalLabels.Core.Indexes;
@@ -21,7 +21,10 @@ namespace DigitalLabels.Import.Config
                 var store = new DocumentStore
                 {
                     Url = ConfigurationManager.AppSettings["DatabaseUrl"],
-                    DefaultDatabase = ConfigurationManager.AppSettings["DatabaseName"]
+                    DefaultDatabase = ConfigurationManager.AppSettings["DatabaseName"],
+                    Credentials = new NetworkCredential(ConfigurationManager.AppSettings["DatabaseUserName"],
+                        ConfigurationManager.AppSettings["DatabasePassword"],
+                        ConfigurationManager.AppSettings["DatabaseDomain"])
                 }.Initialize();
 
                 // Ensure DB exists
